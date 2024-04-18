@@ -19,8 +19,8 @@ package org.apache.commons.lang3.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.lang3.AbstractLangTest;
 import org.junit.jupiter.api.Test;
@@ -128,13 +128,13 @@ public class HashCodeBuilderTest extends AbstractLangTest {
 
     static class TestObjectWithMultipleFields {
         @SuppressWarnings("unused")
-        private int one = 0;
+        private final int one;
 
         @SuppressWarnings("unused")
-        private int two = 0;
+        private final int two;
 
         @SuppressWarnings("unused")
-        private int three = 0;
+        private final int three;
 
         TestObjectWithMultipleFields(final int one, final int two, final int three) {
             this.one = one;
@@ -563,9 +563,9 @@ public class HashCodeBuilderTest extends AbstractLangTest {
         // at org.apache.commons.lang.builder.HashCodeBuilder.append(HashCodeBuilder.java:422)
 
         a.hashCode();
-        assertNull(HashCodeBuilder.getRegistry());
+        assertTrue(HashCodeBuilder.getRegistry().isEmpty());
         b.hashCode();
-        assertNull(HashCodeBuilder.getRegistry());
+        assertTrue(HashCodeBuilder.getRegistry().isEmpty());
     }
 
     @Test

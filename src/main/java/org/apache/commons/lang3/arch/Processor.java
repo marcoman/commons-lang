@@ -79,6 +79,7 @@ public class Processor {
      *     <li>x86</li>
      *     <li>ia64</li>
      *     <li>PPC</li>
+     *     <li>RISCV</li>
      *     <li>Unknown</li>
      * </ul>
      */
@@ -105,6 +106,13 @@ public class Processor {
          * Apple–IBM–Motorola PowerPC architecture.
          */
         PPC("PPC"),
+
+        /**
+         * RISC-V architecture.
+         *
+         * @since 3.14.0
+         */
+        RISC_V("RISC-V"),
 
         /**
          * Unknown architecture.
@@ -214,6 +222,16 @@ public class Processor {
      */
     public boolean isPPC() {
         return Type.PPC == type;
+    }
+
+    /**
+     * Tests if {@link Processor} is type of RISC-V.
+     *
+     * @return {@code true}. if {@link Processor} is {@link Type#RISC_V}, else {@code false}.
+     * @since 3.14.0
+     */
+    public boolean isRISCV() {
+        return Type.RISC_V == type;
     }
 
     /**

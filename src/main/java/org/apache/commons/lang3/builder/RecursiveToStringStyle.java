@@ -60,27 +60,9 @@ public class RecursiveToStringStyle extends ToStringStyle {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public RecursiveToStringStyle() {
-    }
-
-    @Override
-    public void appendDetail(final StringBuffer buffer, final String fieldName, final Object value) {
-        if (!ClassUtils.isPrimitiveWrapper(value.getClass()) &&
-            !String.class.equals(value.getClass()) &&
-            accept(value.getClass())) {
-            buffer.append(ReflectionToStringBuilder.toString(value, this));
-        } else {
-            super.appendDetail(buffer, fieldName, value);
-        }
-    }
-
-    @Override
-    protected void appendDetail(final StringBuffer buffer, final String fieldName, final Collection<?> coll) {
-        appendClassName(buffer, coll);
-        appendIdentityHashCode(buffer, coll);
-        appendDetail(buffer, fieldName, coll.toArray());
     }
 
     /**
@@ -94,5 +76,23 @@ public class RecursiveToStringStyle extends ToStringStyle {
      */
     protected boolean accept(final Class<?> clazz) {
         return true;
+    }
+
+    @Override
+    protected void appendDetail(final StringBuffer buffer, final String fieldName, final Collection<?> coll) {
+        appendClassName(buffer, coll);
+        appendIdentityHashCode(buffer, coll);
+        appendDetail(buffer, fieldName, coll.toArray());
+    }
+
+    @Override
+    public void appendDetail(final StringBuffer buffer, final String fieldName, final Object value) {
+        if (!ClassUtils.isPrimitiveWrapper(value.getClass()) &&
+            !String.class.equals(value.getClass()) &&
+            accept(value.getClass())) {
+            buffer.append(ReflectionToStringBuilder.toString(value, this));
+        } else {
+            super.appendDetail(buffer, fieldName, value);
+        }
     }
 }

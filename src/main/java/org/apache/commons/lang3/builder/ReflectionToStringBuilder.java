@@ -296,7 +296,7 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
      *
      * <p>
      * Superclass fields will be appended up to and including the specified superclass. A null superclass is treated as
-     * {@code java.lang.Object}.
+     * {@link Object}.
      * </p>
      *
      * <p>
@@ -353,7 +353,7 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
      *
      * <p>
      * Superclass fields will be appended up to and including the specified superclass. A null superclass is treated as
-     * {@code java.lang.Object}.
+     * {@link Object}.
      * </p>
      *
      * <p>
@@ -412,7 +412,6 @@ public class ReflectionToStringBuilder extends ToStringBuilder {
     public static String toStringExclude(final Object object, final String... excludeFieldNames) {
         return new ReflectionToStringBuilder(object).setExcludeFieldNames(excludeFieldNames).toString();
     }
-
 
     /**
      * Builds a String for a toString method including the given field names.

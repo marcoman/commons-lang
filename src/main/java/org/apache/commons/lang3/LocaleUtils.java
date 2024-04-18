@@ -39,10 +39,6 @@ import java.util.stream.Collectors;
  */
 public class LocaleUtils {
 
-    private static final char UNDERSCORE = '_';
-    private static final String UNDETERMINED = "und";
-    private static final char DASH = '-';
-
     // class to avoid synchronization (Init on demand)
     static class SyncAvoid {
         /** Unmodifiable list of available locales. */
@@ -56,6 +52,10 @@ public class LocaleUtils {
             AVAILABLE_LOCALE_SET = Collections.unmodifiableSet(new HashSet<>(list));
         }
     }
+    private static final char UNDERSCORE = '_';
+    private static final String UNDETERMINED = "und";
+
+    private static final char DASH = '-';
 
     /** Concurrent map of language locales by country. */
     private static final ConcurrentMap<String, List<Locale>> cLanguagesByCountry =
@@ -357,8 +357,12 @@ public class LocaleUtils {
      *
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.</p>
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public LocaleUtils() {
+        // empty
     }
 
 }

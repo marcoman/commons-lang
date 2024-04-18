@@ -34,7 +34,6 @@ run_CharUtils_isAsciiNumeric: 4,545 milliseconds.
 run_inlined_CharUtils_isAsciiNumeric: 3,417 milliseconds.
 run_inlined_CharUtils_isAsciiNumeric: 85,679 milliseconds.
 
-
 Now: Thu Mar 18 14:24:51 PST 2004
 Sun Microsystems Inc. Java(TM) 2 Runtime Environment, Standard Edition 1.4.2_04-b05
 Sun Microsystems Inc. Java HotSpot(TM) Client VM 1.4.2_04-b05
@@ -52,7 +51,6 @@ Do nothing: 0 milliseconds.
 run_CharUtils_isAsciiNumeric: 630 milliseconds.
 run_inlined_CharUtils_isAsciiNumeric: 709 milliseconds.
 run_inlined_CharUtils_isAsciiNumeric: 84,420 milliseconds.
-
 
  */
 public class CharUtilsPerfRun {
@@ -72,6 +70,11 @@ public class CharUtilsPerfRun {
 
     public static void main(final String[] args) {
         new CharUtilsPerfRun().run();
+    }
+
+    private void printlnTotal(final String prefix, final long startMillis) {
+        final long totalMillis = System.currentTimeMillis() - startMillis;
+        System.out.println(prefix + ": " + NumberFormat.getInstance().format(totalMillis) + " milliseconds.");
     }
 
     private void printSysInfo() {
@@ -145,10 +148,5 @@ public class CharUtilsPerfRun {
             }
         }
         return t;
-    }
-
-    private void printlnTotal(final String prefix, final long startMillis) {
-        final long totalMillis = System.currentTimeMillis() - startMillis;
-        System.out.println(prefix + ": " + NumberFormat.getInstance().format(totalMillis) + " milliseconds.");
     }
 }

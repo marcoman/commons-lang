@@ -54,19 +54,13 @@ public abstract class Diff<T> extends Pair<T, T> {
      *            the field name
      */
     protected Diff(final String fieldName) {
-        this.type = ObjectUtils.defaultIfNull(
-                TypeUtils.getTypeArguments(getClass(), Diff.class).get(
-                        Diff.class.getTypeParameters()[0]), Object.class);
+        this.type = ObjectUtils.defaultIfNull(TypeUtils.getTypeArguments(getClass(), Diff.class).get(Diff.class.getTypeParameters()[0]), Object.class);
         this.fieldName = fieldName;
     }
 
-    /**
-     * Gets the type of the field.
-     *
-     * @return the field type
-     */
-    public final Type getType() {
-        return type;
+    Diff(final String fieldName, final Type type) {
+        this.type = type;
+        this.fieldName = fieldName;
     }
 
     /**
@@ -76,6 +70,29 @@ public abstract class Diff<T> extends Pair<T, T> {
      */
     public final String getFieldName() {
         return fieldName;
+    }
+
+    /**
+     * Gets the type of the field.
+     *
+     * @return the field type
+     * @deprecated Unused, will be removed in 4.0.0.
+     */
+    @Deprecated
+    public final Type getType() {
+        return type;
+    }
+
+    /**
+     * Throws {@link UnsupportedOperationException}.
+     *
+     * @param value
+     *            ignored
+     * @return nothing
+     */
+    @Override
+    public final T setValue(final T value) {
+        throw new UnsupportedOperationException("Cannot alter Diff object.");
     }
 
     /**
@@ -91,17 +108,5 @@ public abstract class Diff<T> extends Pair<T, T> {
     @Override
     public final String toString() {
         return String.format("[%s: %s, %s]", fieldName, getLeft(), getRight());
-    }
-
-    /**
-     * Throws {@link UnsupportedOperationException}.
-     *
-     * @param value
-     *            ignored
-     * @return nothing
-     */
-    @Override
-    public final T setValue(final T value) {
-        throw new UnsupportedOperationException("Cannot alter Diff object.");
     }
 }

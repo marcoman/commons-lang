@@ -287,7 +287,7 @@ public class FluentBitSetTest extends AbstractLangTest {
             assertFalse(bs.get(i), "Shouldn't have flipped bit " + i);
         }
 
-        // pos1 and pos2 is in the same bitset element, boundry testing
+        // pos1 and pos2 is in the same bitset element, boundary testing
         bs = newInstance(16);
         initialSize = bs.size();
         bs.set(0, initialSize);
@@ -506,7 +506,7 @@ public class FluentBitSetTest extends AbstractLangTest {
     public void test_ConstructorInt() {
         FluentBitSet bs = newInstance(128);
         assertEquals(128, bs.size(), "Create FluentBitSet of incorrect size");
-        assertEquals("{}", bs.toString(), "New FluentBitSet had invalid string representation: " + bs.toString());
+        assertEquals("{}", bs.toString(), "New FluentBitSet had invalid string representation: " + bs);
         // All BitSets are created with elements of multiples of 64
         bs = newInstance(89);
         assertEquals(128, bs.size(), "Failed to round FluentBitSet element size");
@@ -634,7 +634,7 @@ public class FluentBitSetTest extends AbstractLangTest {
             assertTrue(!bs.get(i), "Shouldn't have flipped bit " + i);
         }
 
-        // pos1 and pos2 is in the same bitset element, boundry testing
+        // pos1 and pos2 is in the same bitset element, boundary testing
         bs = newInstance(16);
         bs.set(7);
         bs.set(10);
@@ -1360,7 +1360,7 @@ public class FluentBitSetTest extends AbstractLangTest {
             }
         }
 
-        // pos1 and pos2 is in the same bitset element, boundry testing
+        // pos1 and pos2 is in the same bitset element, boundary testing
         bs = newInstance(16);
         bs.set(7, 64);
         assertEquals(64, bs.size(), "Failed to grow BitSet");
@@ -1506,7 +1506,7 @@ public class FluentBitSetTest extends AbstractLangTest {
             }
         }
 
-        // pos1 and pos2 is in the same bitset element, boundry testing
+        // pos1 and pos2 is in the same bitset element, boundary testing
         bs = newInstance(16);
         bs.setInclusive(7, 64);
         assertEquals(128, bs.size(), "Failed to grow BitSet");

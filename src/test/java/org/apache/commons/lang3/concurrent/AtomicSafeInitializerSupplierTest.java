@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang3.concurrent.AbstractConcurrentInitializerCloseAndExceptionsTest.CloseableObject;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,10 +35,14 @@ public class AtomicSafeInitializerSupplierTest extends AbstractConcurrentInitial
     /** An initCounter used in testing. Reset before each test */
     private AtomicInteger initCounter = new AtomicInteger();
 
-    /** A supplier method used in testing */
-    private Object incAndMakeObject() {
-        initCounter.incrementAndGet();
-        return new Object();
+    /**
+     * Creates the initializer to be tested.
+     *
+     * @return the {@code AtomicSafeInitializer} under test
+     */
+    @Override
+    protected ConcurrentInitializer<Object> createInitializer() {
+        return AtomicSafeInitializer.<Object>builder().setInitializer(this::incAndMakeObject).get();
     }
 
     @Override
@@ -49,19 +52,33 @@ public class AtomicSafeInitializerSupplierTest extends AbstractConcurrentInitial
         return AtomicSafeInitializer.<CloseableObject>builder().setInitializer(supplier).setCloser(closer).get();
     }
 
+    /** A supplier method used in testing */
+    private Object incAndMakeObject() {
+        initCounter.incrementAndGet();
+        return new Object();
+    }
+
     @BeforeEach
     public void setUp() {
         initCounter = new AtomicInteger();
     }
 
-    /**
-     * Creates the initializer to be tested.
-     *
-     * @return the {@code AtomicSafeInitializer} under test
-     */
-    @Override
-    protected ConcurrentInitializer<Object> createInitializer() {
-        return AtomicSafeInitializer.<Object>builder().setInitializer(this::incAndMakeObject).get();
+    @Test
+    public void testGetThatReturnsNullFirstTime() throws ConcurrentException {
+        final AtomicSafeInitializer<Object> initializer = new AtomicSafeInitializer<Object>() {
+            final AtomicBoolean firstRun = new AtomicBoolean(true);
+
+            @Override
+            protected Object initialize() {
+                if (firstRun.getAndSet(false)) {
+                    return null;
+                }
+                return new Object();
+            }
+        };
+
+        assertNull(initializer.get());
+        assertNull(initializer.get());
     }
 
     /**
@@ -74,24 +91,5 @@ public class AtomicSafeInitializerSupplierTest extends AbstractConcurrentInitial
     public void testNumberOfInitializeInvocations() throws ConcurrentException, InterruptedException {
         testGetConcurrent();
         assertEquals(1, initCounter.get(), "Wrong number of invocations");
-    }
-
-    @Test
-    public void testGetThatReturnsNullFirstTime() throws ConcurrentException {
-        final AtomicSafeInitializer<Object> initializer = new AtomicSafeInitializer<Object>() {
-            final AtomicBoolean firstRun = new AtomicBoolean(true);
-
-            @Override
-            protected Object initialize() {
-                if (firstRun.getAndSet(false)) {
-                    return null;
-                } else {
-                    return new Object();
-                }
-            }
-        };
-
-        assertNull(initializer.get());
-        assertNull(initializer.get());
     }
 }

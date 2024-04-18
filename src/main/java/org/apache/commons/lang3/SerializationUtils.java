@@ -60,7 +60,8 @@ public class SerializationUtils {
      * <p>For more in-depth information about the problem for which this
      * class here is a workaround, see the JIRA issue LANG-626.</p>
      */
-     static class ClassLoaderAwareObjectInputStream extends ObjectInputStream {
+     static final class ClassLoaderAwareObjectInputStream extends ObjectInputStream {
+        // Note: This is final to avoid Spotbugs CT_CONSTRUCTOR_THROW
         private static final Map<String, Class<?>> primitiveTypes =
                 new HashMap<>();
 
@@ -79,7 +80,7 @@ public class SerializationUtils {
         private final ClassLoader classLoader;
 
         /**
-         * Constructor.
+         * Constructs a new instance.
          * @param in The {@link InputStream}.
          * @param classLoader classloader to use
          * @throws IOException if an I/O error occurs while reading stream header.
@@ -207,7 +208,7 @@ public class SerializationUtils {
             @SuppressWarnings("unchecked")
             final T obj = (T) in.readObject();
             return obj;
-        } catch (final ClassNotFoundException | IOException ex) {
+        } catch (final ClassNotFoundException | IOException | NegativeArraySizeException ex) {
             throw new SerializationException(ex);
         }
     }
@@ -274,8 +275,12 @@ public class SerializationUtils {
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.</p>
      * @since 2.0
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public SerializationUtils() {
+        // empty
     }
 
 }

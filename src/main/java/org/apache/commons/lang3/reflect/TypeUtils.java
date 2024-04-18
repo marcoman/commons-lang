@@ -946,7 +946,7 @@ public class TypeUtils {
      * {@link java.util.Hashtable Hashtable} are also both {@link Object}.
      * In cases where the interface specified by {@code toClass} is
      * (indirectly) implemented more than once (e.g. where {@code toClass}
-     * specifies the interface {@link java.lang.Iterable Iterable} and
+     * specifies the interface {@link Iterable Iterable} and
      * {@code type} specifies a parameterized type that implements both
      * {@link java.util.Set Set} and {@link java.util.Collection Collection}),
      * this method will look at the inheritance hierarchy of only one of the
@@ -1591,7 +1591,7 @@ public class TypeUtils {
             if (useOwner instanceof Class<?>) {
                 builder.append(((Class<?>) useOwner).getName());
             } else {
-                builder.append(useOwner.toString());
+                builder.append(useOwner);
             }
             builder.append('.').append(raw.getSimpleName());
         }
@@ -1938,8 +1938,12 @@ public class TypeUtils {
      * This constructor is public to permit tools that require a JavaBean instance
      * to operate.
      * </p>
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public TypeUtils() {
+        // empty
     }
 
 }

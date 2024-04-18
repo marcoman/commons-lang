@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * A {@link DiffResult} contains a collection of the differences between two
  * {@link Diffable} objects. Typically these differences are displayed using
@@ -39,68 +41,39 @@ public class DiffResult<T> implements Iterable<Diff<?>> {
     /**
      * The {@link String} returned when the objects have no differences:
      * {@value}
-     *
      */
-    public static final String OBJECTS_SAME_STRING = "";
-
-    private static final String DIFFERS_STRING = "differs from";
+    public static final String OBJECTS_SAME_STRING = StringUtils.EMPTY;
 
     private final List<Diff<?>> diffList;
     private final T lhs;
     private final T rhs;
     private final ToStringStyle style;
+    private final String toStringFormat;
 
     /**
      * Creates a {@link DiffResult} containing the differences between two
      * objects.
      *
      * @param lhs
-     *            the left-hand object
+     *            the left-hand side object
      * @param rhs
-     *            the right-hand object
+     *            the right-hand side object
      * @param diffList
      *            the list of differences, may be empty
      * @param style
      *            the style to use for the {@link #toString()} method. May be
      *            {@code null}, in which case
      *            {@link ToStringStyle#DEFAULT_STYLE} is used
-     * @throws NullPointerException if {@code lhs}, {@code rhs} or {@code diffs} is {@code null}
+     * @param toStringFormat
+     *            Two-argument format string for {@link String#format(String, Object...)}, for example {@code "%s differs from %s"}.
+     * @throws NullPointerException if {@code lhs}, {@code rhs} or {@code diffs} are {@code null}.
      */
-    DiffResult(final T lhs, final T rhs, final List<Diff<?>> diffList,
-            final ToStringStyle style) {
-        Objects.requireNonNull(lhs, "lhs");
-        Objects.requireNonNull(rhs, "rhs");
-        Objects.requireNonNull(diffList, "diffList");
-
-        this.diffList = diffList;
-        this.lhs = lhs;
-        this.rhs = rhs;
-
-        if (style == null) {
-            this.style = ToStringStyle.DEFAULT_STYLE;
-        } else {
-            this.style = style;
-        }
-    }
-
-    /**
-     * Returns the object the right object has been compared to.
-     *
-     * @return the left object of the diff
-     * @since 3.10
-     */
-    public T getLeft() {
-        return this.lhs;
-    }
-
-    /**
-     * Returns the object the left object has been compared to.
-     *
-     * @return the right object of the diff
-     * @since 3.10
-     */
-    public T getRight() {
-        return this.rhs;
+    DiffResult(final T lhs, final T rhs, final List<Diff<?>> diffList, final ToStringStyle style, final String toStringFormat) {
+        this.diffList = Objects.requireNonNull(diffList, "diffList");
+        this.lhs = Objects.requireNonNull(lhs, "lhs");
+        this.rhs = Objects.requireNonNull(rhs, "rhs");
+        this.style = Objects.requireNonNull(style, "style");
+        this.toStringFormat = Objects.requireNonNull(toStringFormat, "toStringFormat");
     }
 
     /**
@@ -114,6 +87,16 @@ public class DiffResult<T> implements Iterable<Diff<?>> {
     }
 
     /**
+     * Returns the object the right object has been compared to.
+     *
+     * @return the left object of the diff
+     * @since 3.10
+     */
+    public T getLeft() {
+        return this.lhs;
+    }
+
+    /**
      * Returns the number of differences between the two objects.
      *
      * @return the number of differences
@@ -123,12 +106,32 @@ public class DiffResult<T> implements Iterable<Diff<?>> {
     }
 
     /**
+     * Returns the object the left object has been compared to.
+     *
+     * @return the right object of the diff
+     * @since 3.10
+     */
+    public T getRight() {
+        return this.rhs;
+    }
+
+    /**
      * Returns the style used by the {@link #toString()} method.
      *
      * @return the style
      */
     public ToStringStyle getToStringStyle() {
         return style;
+    }
+
+    /**
+     * Returns an iterator over the {@link Diff} objects contained in this list.
+     *
+     * @return the iterator
+     */
+    @Override
+    public Iterator<Diff<?>> iterator() {
+        return diffList.iterator();
     }
 
     /**
@@ -187,16 +190,6 @@ public class DiffResult<T> implements Iterable<Diff<?>> {
             rhsBuilder.append(diff.getFieldName(), diff.getRight());
         });
 
-        return String.format("%s %s %s", lhsBuilder.build(), DIFFERS_STRING, rhsBuilder.build());
-    }
-
-    /**
-     * Returns an iterator over the {@link Diff} objects contained in this list.
-     *
-     * @return the iterator
-     */
-    @Override
-    public Iterator<Diff<?>> iterator() {
-        return diffList.iterator();
+        return String.format(toStringFormat, lhsBuilder.build(), rhsBuilder.build());
     }
 }

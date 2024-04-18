@@ -30,12 +30,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Extends {@code java.text.MessageFormat} to allow pluggable/additional formatting
+ * Extends {@link java.text.MessageFormat} to allow pluggable/additional formatting
  * options for embedded format elements.  Client code should specify a registry
  * of {@link FormatFactory} instances associated with {@link String}
  * format names.  This registry will be consulted when the format elements are
  * parsed from the message pattern.  In this way custom patterns can be specified,
- * and the formats supported by {@code java.text.MessageFormat} can be overridden
+ * and the formats supported by {@link java.text.MessageFormat} can be overridden
  * at the format and/or format style level (see MessageFormat).  A "format element"
  * embedded in the message pattern is specified (<b>()?</b> signifies optionality):<br>
  * <code>{</code><i>argument-number</i><b>(</b>{@code ,}<i>format-name</i><b>
@@ -43,7 +43,7 @@ import org.apache.commons.lang3.Validate;
  *
  * <p>
  * <i>format-name</i> and <i>format-style</i> values are trimmed of surrounding whitespace
- * in the manner of {@code java.text.MessageFormat}.  If <i>format-name</i> denotes
+ * in the manner of {@link java.text.MessageFormat}.  If <i>format-name</i> denotes
  * {@code FormatFactory formatFactoryInstance} in {@code registry}, a {@link Format}
  * matching <i>format-name</i> and <i>format-style</i> is requested from
  * {@code formatFactoryInstance}.  If this is successful, the {@link Format}
@@ -56,7 +56,7 @@ import org.apache.commons.lang3.Validate;
  * {@link UnsupportedOperationException} if called.
  * </p>
  *
- * <p>Limitations inherited from {@code java.text.MessageFormat}:</p>
+ * <p>Limitations inherited from {@link java.text.MessageFormat}:</p>
  * <ul>
  * <li>When using "choice" subformats, support for nested formatting instructions is limited
  *     to that provided by the base class.</li>
@@ -112,17 +112,6 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
-     * Create a new ExtendedMessageFormat for the default locale.
-     *
-     * @param pattern  the pattern to use, not null
-     * @param registry  the registry of format factories, may be null
-     * @throws IllegalArgumentException in case of a bad pattern.
-     */
-    public ExtendedMessageFormat(final String pattern, final Map<String, ? extends FormatFactory> registry) {
-        this(pattern, Locale.getDefault(), registry);
-    }
-
-    /**
      * Create a new ExtendedMessageFormat.
      *
      * @param pattern  the pattern to use, not null.
@@ -138,11 +127,48 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
-     * {@inheritDoc}
+     * Create a new ExtendedMessageFormat for the default locale.
+     *
+     * @param pattern  the pattern to use, not null
+     * @param registry  the registry of format factories, may be null
+     * @throws IllegalArgumentException in case of a bad pattern.
      */
-    @Override
-    public String toPattern() {
-        return toPattern;
+    public ExtendedMessageFormat(final String pattern, final Map<String, ? extends FormatFactory> registry) {
+        this(pattern, Locale.getDefault(), registry);
+    }
+
+    /**
+     * Consume a quoted string, adding it to {@code appendTo} if
+     * specified.
+     *
+     * @param pattern pattern to parse
+     * @param pos current parse position
+     * @param appendTo optional StringBuilder to append
+     * @return {@code appendTo}
+     */
+    private StringBuilder appendQuotedString(final String pattern, final ParsePosition pos,
+            final StringBuilder appendTo) {
+        assert pattern.toCharArray()[pos.getIndex()] == QUOTE :
+            "Quoted string must start with quote character";
+
+        // handle quote character at the beginning of the string
+        if (appendTo != null) {
+            appendTo.append(QUOTE);
+        }
+        next(pos);
+
+        final int start = pos.getIndex();
+        final char[] c = pattern.toCharArray();
+        for (int i = pos.getIndex(); i < pattern.length(); i++) {
+            if (c[pos.getIndex()] == QUOTE) {
+                next(pos);
+                return appendTo == null ? null : appendTo.append(c, start,
+                        pos.getIndex() - start);
+            }
+            next(pos);
+        }
+        throw new IllegalArgumentException(
+                "Unterminated quoted string at position " + start);
     }
 
     /**
@@ -218,49 +244,15 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
-     * Throws UnsupportedOperationException - see class Javadoc for details.
-     *
-     * @param formatElementIndex format element index
-     * @param newFormat the new format
-     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
+     * Learn whether the specified Collection contains non-null elements.
+     * @param coll to check
+     * @return {@code true} if some Object was found, {@code false} otherwise.
      */
-    @Override
-    public void setFormat(final int formatElementIndex, final Format newFormat) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Throws UnsupportedOperationException - see class Javadoc for details.
-     *
-     * @param argumentIndex argument index
-     * @param newFormat the new format
-     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
-     */
-    @Override
-    public void setFormatByArgumentIndex(final int argumentIndex, final Format newFormat) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Throws UnsupportedOperationException - see class Javadoc for details.
-     *
-     * @param newFormats new formats
-     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
-     */
-    @Override
-    public void setFormats(final Format[] newFormats) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Throws UnsupportedOperationException - see class Javadoc for details.
-     *
-     * @param newFormats new formats
-     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
-     */
-    @Override
-    public void setFormatsByArgumentIndex(final Format[] newFormats) {
-        throw new UnsupportedOperationException();
+    private boolean containsElements(final Collection<?> coll) {
+        if (coll == null || coll.isEmpty()) {
+            return false;
+        }
+        return coll.stream().anyMatch(Objects::nonNull);
     }
 
     /**
@@ -291,17 +283,6 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = HASH_SEED * result + Objects.hashCode(registry);
-        result = HASH_SEED * result + Objects.hashCode(toPattern);
-        return result;
-    }
-
-    /**
      * Gets a custom format from a format description.
      *
      * @param desc String
@@ -325,79 +306,24 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
-     * Read the argument index from the current format element
+     * Consume quoted string only
      *
      * @param pattern pattern to parse
      * @param pos current parse position
-     * @return argument index
      */
-    private int readArgumentIndex(final String pattern, final ParsePosition pos) {
-        final int start = pos.getIndex();
-        seekNonWs(pattern, pos);
-        final StringBuilder result = new StringBuilder();
-        boolean error = false;
-        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {
-            char c = pattern.charAt(pos.getIndex());
-            if (Character.isWhitespace(c)) {
-                seekNonWs(pattern, pos);
-                c = pattern.charAt(pos.getIndex());
-                if (c != START_FMT && c != END_FE) {
-                    error = true;
-                    continue;
-                }
-            }
-            if ((c == START_FMT || c == END_FE) && result.length() > 0) {
-                try {
-                    return Integer.parseInt(result.toString());
-                } catch (final NumberFormatException ignored) {
-                    // we've already ensured only digits, so unless something
-                    // outlandishly large was specified we should be okay.
-                }
-            }
-            error = !Character.isDigit(c);
-            result.append(c);
-        }
-        if (error) {
-            throw new IllegalArgumentException(
-                    "Invalid format argument index at position " + start + ": "
-                            + pattern.substring(start, pos.getIndex()));
-        }
-        throw new IllegalArgumentException(
-                "Unterminated format element at position " + start);
+    private void getQuotedString(final String pattern, final ParsePosition pos) {
+        appendQuotedString(pattern, pos, null);
     }
 
     /**
-     * Parse the format component of a format element.
-     *
-     * @param pattern string to parse
-     * @param pos current parse position
-     * @return Format description String
+     * {@inheritDoc}
      */
-    private String parseFormatDescription(final String pattern, final ParsePosition pos) {
-        final int start = pos.getIndex();
-        seekNonWs(pattern, pos);
-        final int text = pos.getIndex();
-        int depth = 1;
-        for (; pos.getIndex() < pattern.length(); next(pos)) {
-            switch (pattern.charAt(pos.getIndex())) {
-            case START_FE:
-                depth++;
-                break;
-            case END_FE:
-                depth--;
-                if (depth == 0) {
-                    return pattern.substring(text, pos.getIndex());
-                }
-                break;
-            case QUOTE:
-                getQuotedString(pattern, pos);
-                break;
-            default:
-                break;
-            }
-        }
-        throw new IllegalArgumentException(
-                "Unterminated format element at position " + start);
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = HASH_SEED * result + Objects.hashCode(registry);
+        result = HASH_SEED * result + Objects.hashCode(toPattern);
+        return result;
     }
 
     /**
@@ -445,6 +371,93 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
+     * Convenience method to advance parse position by 1
+     *
+     * @param pos ParsePosition
+     * @return {@code pos}
+     */
+    private ParsePosition next(final ParsePosition pos) {
+        pos.setIndex(pos.getIndex() + 1);
+        return pos;
+    }
+
+    /**
+     * Parse the format component of a format element.
+     *
+     * @param pattern string to parse
+     * @param pos current parse position
+     * @return Format description String
+     */
+    private String parseFormatDescription(final String pattern, final ParsePosition pos) {
+        final int start = pos.getIndex();
+        seekNonWs(pattern, pos);
+        final int text = pos.getIndex();
+        int depth = 1;
+        for (; pos.getIndex() < pattern.length(); next(pos)) {
+            switch (pattern.charAt(pos.getIndex())) {
+            case START_FE:
+                depth++;
+                break;
+            case END_FE:
+                depth--;
+                if (depth == 0) {
+                    return pattern.substring(text, pos.getIndex());
+                }
+                break;
+            case QUOTE:
+                getQuotedString(pattern, pos);
+                break;
+            default:
+                break;
+            }
+        }
+        throw new IllegalArgumentException(
+                "Unterminated format element at position " + start);
+    }
+
+    /**
+     * Read the argument index from the current format element
+     *
+     * @param pattern pattern to parse
+     * @param pos current parse position
+     * @return argument index
+     */
+    private int readArgumentIndex(final String pattern, final ParsePosition pos) {
+        final int start = pos.getIndex();
+        seekNonWs(pattern, pos);
+        final StringBuilder result = new StringBuilder();
+        boolean error = false;
+        for (; !error && pos.getIndex() < pattern.length(); next(pos)) {
+            char c = pattern.charAt(pos.getIndex());
+            if (Character.isWhitespace(c)) {
+                seekNonWs(pattern, pos);
+                c = pattern.charAt(pos.getIndex());
+                if (c != START_FMT && c != END_FE) {
+                    error = true;
+                    continue;
+                }
+            }
+            if ((c == START_FMT || c == END_FE) && result.length() > 0) {
+                try {
+                    return Integer.parseInt(result.toString());
+                } catch (final NumberFormatException ignored) {
+                    // we've already ensured only digits, so unless something
+                    // outlandishly large was specified we should be okay.
+                }
+            }
+            error = !Character.isDigit(c);
+            result.append(c);
+        }
+        if (error) {
+            throw new IllegalArgumentException(
+                    "Invalid format argument index at position " + start + ": "
+                            + pattern.substring(start, pos.getIndex()));
+        }
+        throw new IllegalArgumentException(
+                "Unterminated format element at position " + start);
+    }
+
+    /**
      * Consume whitespace from the current parse position.
      *
      * @param pattern String to read
@@ -460,69 +473,56 @@ public class ExtendedMessageFormat extends MessageFormat {
     }
 
     /**
-     * Convenience method to advance parse position by 1
+     * Throws UnsupportedOperationException - see class Javadoc for details.
      *
-     * @param pos ParsePosition
-     * @return {@code pos}
+     * @param formatElementIndex format element index
+     * @param newFormat the new format
+     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
      */
-    private ParsePosition next(final ParsePosition pos) {
-        pos.setIndex(pos.getIndex() + 1);
-        return pos;
+    @Override
+    public void setFormat(final int formatElementIndex, final Format newFormat) {
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * Consume a quoted string, adding it to {@code appendTo} if
-     * specified.
+     * Throws UnsupportedOperationException - see class Javadoc for details.
      *
-     * @param pattern pattern to parse
-     * @param pos current parse position
-     * @param appendTo optional StringBuilder to append
-     * @return {@code appendTo}
+     * @param argumentIndex argument index
+     * @param newFormat the new format
+     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
      */
-    private StringBuilder appendQuotedString(final String pattern, final ParsePosition pos,
-            final StringBuilder appendTo) {
-        assert pattern.toCharArray()[pos.getIndex()] == QUOTE :
-            "Quoted string must start with quote character";
-
-        // handle quote character at the beginning of the string
-        if (appendTo != null) {
-            appendTo.append(QUOTE);
-        }
-        next(pos);
-
-        final int start = pos.getIndex();
-        final char[] c = pattern.toCharArray();
-        for (int i = pos.getIndex(); i < pattern.length(); i++) {
-            if (c[pos.getIndex()] == QUOTE) {
-                next(pos);
-                return appendTo == null ? null : appendTo.append(c, start,
-                        pos.getIndex() - start);
-            }
-            next(pos);
-        }
-        throw new IllegalArgumentException(
-                "Unterminated quoted string at position " + start);
+    @Override
+    public void setFormatByArgumentIndex(final int argumentIndex, final Format newFormat) {
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * Consume quoted string only
+     * Throws UnsupportedOperationException - see class Javadoc for details.
      *
-     * @param pattern pattern to parse
-     * @param pos current parse position
+     * @param newFormats new formats
+     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
      */
-    private void getQuotedString(final String pattern, final ParsePosition pos) {
-        appendQuotedString(pattern, pos, null);
+    @Override
+    public void setFormats(final Format[] newFormats) {
+        throw new UnsupportedOperationException();
     }
 
     /**
-     * Learn whether the specified Collection contains non-null elements.
-     * @param coll to check
-     * @return {@code true} if some Object was found, {@code false} otherwise.
+     * Throws UnsupportedOperationException - see class Javadoc for details.
+     *
+     * @param newFormats new formats
+     * @throws UnsupportedOperationException always thrown since this isn't supported by ExtendMessageFormat
      */
-    private boolean containsElements(final Collection<?> coll) {
-        if (coll == null || coll.isEmpty()) {
-            return false;
-        }
-        return coll.stream().anyMatch(Objects::nonNull);
+    @Override
+    public void setFormatsByArgumentIndex(final Format[] newFormats) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toPattern() {
+        return toPattern;
     }
 }

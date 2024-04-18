@@ -106,6 +106,12 @@ public class DurationUtils {
         return !duration.isNegative() && !duration.isZero();
     }
 
+    private static <E extends Throwable> Instant now(final FailableConsumer<Instant, E> nowConsumer) throws E {
+        final Instant start = Instant.now();
+        nowConsumer.accept(start);
+        return start;
+    }
+
     /**
      * Runs the lambda and returns the duration of its execution.
      *
@@ -130,12 +136,6 @@ public class DurationUtils {
      */
     public static <E extends Throwable> Duration of(final FailableRunnable<E> runnable) throws E {
         return of(start -> runnable.run());
-    }
-
-    private static <E extends Throwable> Instant now(final FailableConsumer<Instant, E> nowConsumer) throws E {
-        final Instant start = Instant.now();
-        nowConsumer.accept(start);
-        return start;
     }
 
     /**
@@ -219,4 +219,13 @@ public class DurationUtils {
         return ObjectUtils.defaultIfNull(duration, Duration.ZERO);
     }
 
+    /**
+     * Make private in 4.0.
+     *
+     * @deprecated TODO Make private in 4.0.
+     */
+    @Deprecated
+    public DurationUtils() {
+        // empty
+    }
 }

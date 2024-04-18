@@ -88,7 +88,7 @@ public class LazyInitializer<T> extends AbstractConcurrentInitializer<T, Concurr
     }
 
     /**
-     * A unique value indicating an un-initialzed instance.
+     * A unique value indicating an un-initialized instance.
      */
     private static final Object NO_INIT = new Object();
 
@@ -149,6 +149,14 @@ public class LazyInitializer<T> extends AbstractConcurrentInitializer<T, Concurr
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected ConcurrentException getTypedException(final Exception e) {
+        return new ConcurrentException(e);
+    }
+
+    /**
      * Tests whether this instance is initialized. Once initialized, always returns true.
      *
      * @return whether this instance is initialized. Once initialized, always returns true.
@@ -157,14 +165,6 @@ public class LazyInitializer<T> extends AbstractConcurrentInitializer<T, Concurr
     @Override
     public boolean isInitialized() {
         return object != NO_INIT;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected ConcurrentException getTypedException(Exception e) {
-        return new ConcurrentException(e);
     }
 
 }

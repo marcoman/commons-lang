@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * Package-private reflection code.
  */
-class Reflection {
+final class Reflection {
 
     /**
      * Delegates to {@link Field#get(Object)} and rethrows {@link IllegalAccessException} as {@link IllegalArgumentException}.
@@ -36,7 +36,7 @@ class Reflection {
     static Object getUnchecked(final Field field, final Object obj) {
         try {
             return Objects.requireNonNull(field, "field").get(obj);
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             throw new IllegalArgumentException(e);
         }
     }

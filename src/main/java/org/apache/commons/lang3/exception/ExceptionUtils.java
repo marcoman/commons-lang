@@ -72,21 +72,26 @@ public class ExceptionUtils {
     static final String WRAPPED_MARKER = " [wrapped] ";
 
     /**
-     * Use to throws a checked exception without adding the exception to the throws
+     * Throws the given (usually checked) exception without adding the exception to the throws
      * clause of the calling method. This method prevents throws clause
-     * pollution and reduces the clutter of "Caused by" exceptions in the
+     * inflation and reduces the clutter of "Caused by" exceptions in the
      * stack trace.
      * <p>
-     * The use of this technique may be controversial, but exceedingly useful to
-     * library developers.
+     * The use of this technique may be controversial, but useful.
      * </p>
      * <pre>
-     *  public int propagateExample { // note that there is no throws clause
+     *  // There is no throws clause in the method signature.
+     *  public int propagateExample {
      *      try {
-     *          return invocation(); // throws IOException
+     *          // Throws IOException
+     *          invocation();
      *      } catch (Exception e) {
-     *          return ExceptionUtils.rethrowRuntimeException(e);  // propagates a checked exception
+     *          // Propagates a checked exception.
+     *          throw ExceptionUtils.asRuntimeException(e);
      *      }
+     *      // more processing
+     *      ...
+     *      return value;
      *  }
      * </pre>
      * <p>
@@ -94,27 +99,34 @@ public class ExceptionUtils {
      * checked exception in a RuntimeException:
      * </p>
      * <pre>
-     *  public int wrapExample { // note that there is no throws clause
+     *  // There is no throws clause in the method signature.
+     *  public int wrapExample() {
      *      try {
-     *          return invocation(); // throws IOException
+     *          // throws IOException.
+     *          invocation();
      *      } catch (Error e) {
      *          throw e;
      *      } catch (RuntimeException e) {
-     *          throw e;  // wraps a checked exception
+     *          // Throws an unchecked exception.
+     *          throw e;
      *      } catch (Exception e) {
-     *          throw new UndeclaredThrowableException(e);  // wraps a checked exception
+     *          // Wraps a checked exception.
+     *          throw new UndeclaredThrowableException(e);
      *      }
+     *      // more processing
+     *      ...
+     *      return value;
      *  }
      * </pre>
      * <p>
-     * One downside to using this approach is that the java compiler will not
+     * One downside to using this approach is that the Java compiler will not
      * allow invoking code to specify a checked exception in a catch clause
      * unless there is some code path within the try block that has invoked a
      * method declared with that checked exception. If the invoking site wishes
      * to catch the shaded checked exception, it must either invoke the shaded
      * code through a method re-declaring the desired checked exception, or
      * catch Exception and use the {@code instanceof} operator. Either of these
-     * techniques are required when interacting with non-java jvm code such as
+     * techniques are required when interacting with non-Java JVM code such as
      * Jython, Scala, or Groovy, since these languages do not consider any
      * exceptions as checked.
      * </p>
@@ -125,7 +137,7 @@ public class ExceptionUtils {
      * @return Never actually returned, this generic type matches any type
      *         which the calling site requires. "Returning" the results of this
      *         method, as done in the propagateExample above, will satisfy the
-     *         java compiler requirement that all code paths return a value.
+     *         Java compiler requirement that all code paths return a value.
      * @since 3.14.0
      * @see #wrapAndThrow(Throwable)
      */
@@ -288,17 +300,17 @@ public class ExceptionUtils {
     }
 
     /**
-     * Introspects the {@link Throwable} to obtain the root cause.
+     * Walks the {@link Throwable} to obtain its root cause.
      *
-     * <p>This method walks through the exception chain to the last element,
-     * "root" of the tree, using {@link Throwable#getCause()}, and
+     * <p>This method walks through the exception chain until the last element,
+     * the root cause of the chain, using {@link Throwable#getCause()}, and
      * returns that exception.</p>
      *
-     * <p>From version 2.2, this method handles recursive cause structures
-     * that might otherwise cause infinite loops. If the throwable parameter
-     * has a cause of itself, then null will be returned. If the throwable
-     * parameter cause chain loops, the last element in the chain before the
-     * loop is returned.</p>
+     * <p>This method handles recursive cause chains that might
+     * otherwise cause infinite loops. The cause chain is processed until
+     * the end, or until the next item in the chain is already
+     * processed. If we detect a loop, then return the element before the loop.</p>
+
      *
      * @param throwable  the throwable to get the root cause for, may be null
      * @return the root cause of the {@link Throwable},
@@ -477,13 +489,13 @@ public class ExceptionUtils {
      * A throwable with one cause will return {@code 2} and so on.
      * A {@code null} throwable will return {@code 0}.</p>
      *
-     * <p>From version 2.2, this method handles recursive cause structures
+     * <p>This method handles recursive cause chains
      * that might otherwise cause infinite loops. The cause chain is
-     * processed until the end is reached, or until the next item in the
-     * chain is already in the result set.</p>
+     * processed until the end, or until the next item in the
+     * chain is already in the result.</p>
      *
      * @param throwable  the throwable to inspect, may be null
-     * @return the count of throwables, zero if null input
+     * @return the count of throwables, zero on null input
      */
     public static int getThrowableCount(final Throwable throwable) {
         return getThrowableList(throwable).size();
@@ -499,10 +511,10 @@ public class ExceptionUtils {
      * two elements. - the input throwable and the cause throwable.
      * A {@code null} throwable will return a list of size zero.</p>
      *
-     * <p>This method handles recursive cause structures that might
+     * <p>This method handles recursive cause chains that might
      * otherwise cause infinite loops. The cause chain is processed until
-     * the end is reached, or until the next item in the chain is already
-     * in the result set.</p>
+     * the end, or until the next item in the chain is already
+     * in the result list.</p>
      *
      * @param throwable  the throwable to inspect, may be null
      * @return the list of throwables, never null
@@ -527,10 +539,10 @@ public class ExceptionUtils {
      * two elements. - the input throwable and the cause throwable.
      * A {@code null} throwable will return an array of size zero.</p>
      *
-     * <p>From version 2.2, this method handles recursive cause structures
+     * <p>This method handles recursive cause chains
      * that might otherwise cause infinite loops. The cause chain is
-     * processed until the end is reached, or until the next item in the
-     * chain is already in the result set.</p>
+     * processed until the end, or until the next item in the
+     * chain is already in the result array.</p>
      *
      * @see #getThrowableList(Throwable)
      * @param throwable  the throwable to inspect, may be null
@@ -814,20 +826,22 @@ public class ExceptionUtils {
     }
 
     /**
-     * Use to throw a checked exception without adding the exception to the throws
+     * Throws the given (usually checked) exception without adding the exception to the throws
      * clause of the calling method. This method prevents throws clause
-     * pollution and reduces the clutter of "Caused by" exceptions in the
+     * inflation and reduces the clutter of "Caused by" exceptions in the
      * stack trace.
      * <p>
-     * The use of this technique may be controversial, but exceedingly useful to
-     * library developers.
+     * The use of this technique may be controversial, but useful.
      * </p>
      * <pre>
-     *  public int propagateExample { // note that there is no throws clause
+     *  // There is no throws clause in the method signature.
+     *  public int propagateExample() {
      *      try {
-     *          return invocation(); // throws IOException
-     *      } catch (Exception e) {
-     *          return ExceptionUtils.rethrow(e);  // propagates a checked exception
+     *          // throws SomeCheckedException.
+     *          return invocation();
+     *      } catch (SomeCheckedException e) {
+     *          // Propagates a checked exception and compiles to return an int.
+     *          return ExceptionUtils.rethrow(e);
      *      }
      *  }
      * </pre>
@@ -836,43 +850,45 @@ public class ExceptionUtils {
      * checked exception in a RuntimeException:
      * </p>
      * <pre>
-     *  public int wrapExample { // note that there is no throws clause
+     *  // There is no throws clause in the method signature.
+     *  public int wrapExample() {
      *      try {
-     *          return invocation(); // throws IOException
+     *          // throws IOException.
+     *          return invocation();
      *      } catch (Error e) {
      *          throw e;
      *      } catch (RuntimeException e) {
-     *          throw e;  // wraps a checked exception
+     *          // Throws an unchecked exception.
+     *          throw e;
      *      } catch (Exception e) {
-     *          throw new UndeclaredThrowableException(e);  // wraps a checked exception
+     *          // wraps a checked exception.
+     *          throw new UndeclaredThrowableException(e);
      *      }
      *  }
      * </pre>
      * <p>
-     * One downside to using this approach is that the java compiler will not
+     * One downside to using this approach is that the Java compiler will not
      * allow invoking code to specify a checked exception in a catch clause
      * unless there is some code path within the try block that has invoked a
      * method declared with that checked exception. If the invoking site wishes
      * to catch the shaded checked exception, it must either invoke the shaded
      * code through a method re-declaring the desired checked exception, or
      * catch Exception and use the {@code instanceof} operator. Either of these
-     * techniques are required when interacting with non-java jvm code such as
+     * techniques are required when interacting with non-Java JVM code such as
      * Jython, Scala, or Groovy, since these languages do not consider any
      * exceptions as checked.
      * </p>
      *
      * @param throwable
      *            The throwable to rethrow.
-     * @param <T> The type of the returned value.
-     * @return Never actually returned, this generic type matches any type
+     * @param <T> The type of the return value.
+     * @return Never actually returns, this generic type matches any type
      *         which the calling site requires. "Returning" the results of this
      *         method, as done in the propagateExample above, will satisfy the
-     *         java compiler requirement that all code paths return a value.
+     *         Java compiler requirement that all code paths return a value.
      * @since 3.5
      * @see #wrapAndThrow(Throwable)
-     * @deprecated Use {@link #asRuntimeException(Throwable)}.
      */
-    @Deprecated
     public static <T> T rethrow(final Throwable throwable) {
         // claim that the typeErasure invocation throws a RuntimeException
         return ExceptionUtils.<T, RuntimeException>eraseType(throwable);
@@ -887,8 +903,8 @@ public class ExceptionUtils {
      * </p>
      *
      * <p>
-     * This method handles recursive cause structures that might otherwise cause infinite loops. The cause chain is
-     * processed until the end is reached, or until the next item in the chain is already in the result set.
+     * This method handles recursive cause chains that might otherwise cause infinite loops. The cause chain is
+     * processed until the end, or until the next item in the chain is already in the result.
      * </p>
      *
      * @param throwable The Throwable to traverse
@@ -1080,7 +1096,7 @@ public class ExceptionUtils {
      * @param <R> The type of the returned value.
      * @return Never actually returned, this generic type matches any type
      *         which the calling site requires. "Returning" the results of this
-     *         method will satisfy the java compiler requirement that all code
+     *         method will satisfy the Java compiler requirement that all code
      *         paths return a value.
      * @since 3.5
      * @see #asRuntimeException(Throwable)
@@ -1094,9 +1110,10 @@ public class ExceptionUtils {
      * Public constructor allows an instance of {@link ExceptionUtils} to be created, although that is not
      * normally necessary.
      *
-     * @deprecated Will be private in 3.0.
+     * @deprecated TODO Make private in 4.0.
      */
     @Deprecated
     public ExceptionUtils() {
+        // empty
     }
 }

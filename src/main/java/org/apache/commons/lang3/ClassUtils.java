@@ -528,7 +528,7 @@ public class ClassUtils {
      */
     public static Class<?> getClass(final ClassLoader classLoader, final String className, final boolean initialize) throws ClassNotFoundException {
         try {
-            Class<?> clazz = namePrimitiveMap.get(className);
+            final Class<?> clazz = namePrimitiveMap.get(className);
             return clazz != null ? clazz : Class.forName(toCanonicalName(className), initialize, classLoader);
         } catch (final ClassNotFoundException ex) {
             // allow path separators (.) as inner class name separators
@@ -982,7 +982,7 @@ public class ClassUtils {
      *
      * <p>
      * Note that this method differs from {@link #getSimpleName(Class)} in that this will return, for example
-     * {@code "Map.Entry"} whilst the {@code java.lang.Class} variant will simply return {@code "Entry"}. In this example
+     * {@code "Map.Entry"} whilst the {@link Class} variant will simply return {@code "Entry"}. In this example
      * the argument {@code className} is the string {@code java.util.Map$Entry} (note the {@code $} sign.
      * </p>
      *
@@ -1384,12 +1384,8 @@ public class ClassUtils {
         if (!ArrayUtils.isSameLength(classArray, toClassArray)) {
             return false;
         }
-        if (classArray == null) {
-            classArray = ArrayUtils.EMPTY_CLASS_ARRAY;
-        }
-        if (toClassArray == null) {
-            toClassArray = ArrayUtils.EMPTY_CLASS_ARRAY;
-        }
+        classArray = ArrayUtils.nullToEmpty(classArray);
+        toClassArray = ArrayUtils.nullToEmpty(toClassArray);
         for (int i = 0; i < classArray.length; i++) {
             if (!isAssignable(classArray[i], toClassArray[i], autoboxing)) {
                 return false;
@@ -1409,15 +1405,6 @@ public class ClassUtils {
     }
 
     /**
-     * Tests whether a {@link Class} is public.
-     * @param cls Class to test.
-     * @return {@code true} if {@code cls} is public.
-     * @since 3.13.0
-     */
-    public static boolean isPublic(final Class<?> cls) {
-        return Modifier.isPublic(cls.getModifiers());
-    }
-    /**
      * Returns whether the given {@code type} is a primitive or primitive wrapper ({@link Boolean}, {@link Byte},
      * {@link Character}, {@link Short}, {@link Integer}, {@link Long}, {@link Double}, {@link Float}).
      *
@@ -1432,7 +1419,6 @@ public class ClassUtils {
         }
         return type.isPrimitive() || isPrimitiveWrapper(type);
     }
-
     /**
      * Returns whether the given {@code type} is a primitive wrapper ({@link Boolean}, {@link Byte}, {@link Character},
      * {@link Short}, {@link Integer}, {@link Long}, {@link Double}, {@link Float}).
@@ -1444,6 +1430,16 @@ public class ClassUtils {
      */
     public static boolean isPrimitiveWrapper(final Class<?> type) {
         return wrapperPrimitiveMap.containsKey(type);
+    }
+
+    /**
+     * Tests whether a {@link Class} is public.
+     * @param cls Class to test.
+     * @return {@code true} if {@code cls} is public.
+     * @since 3.13.0
+     */
+    public static boolean isPublic(final Class<?> cls) {
+        return Modifier.isPublic(cls.getModifiers());
     }
 
     /**
@@ -1616,8 +1612,12 @@ public class ClassUtils {
      * <p>
      * This constructor is public to permit tools that require a JavaBean instance to operate.
      * </p>
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public ClassUtils() {
+        // empty
     }
 
 }

@@ -37,6 +37,12 @@ import org.junit.jupiter.api.Test;
  */
 public class NumberUtilsTest extends AbstractLangTest {
 
+    private static void assertCreateNumberZero(final String number, final Object zero, final Object negativeZero) {
+        assertEquals(zero, NumberUtils.createNumber(number), () -> "Input: " + number);
+        assertEquals(zero, NumberUtils.createNumber("+" + number), () -> "Input: +" + number);
+        assertEquals(negativeZero, NumberUtils.createNumber("-" + number), () -> "Input: -" + number);
+    }
+
     private boolean checkCreateNumber(final String val) {
         try {
             final Object obj = NumberUtils.createNumber(val);
@@ -638,9 +644,9 @@ public class NumberUtilsTest extends AbstractLangTest {
         assertEquals(new BigDecimal("1.7976931348623159e+308"), NumberUtils.createNumber("1.7976931348623159e+308"));
 
         // Requested type is parsed as zero but the value is not zero
-        final Double nonZero1 = Double.valueOf(((double) Float.MIN_VALUE) / 2);
+        final Double nonZero1 = Double.valueOf((double) Float.MIN_VALUE / 2);
         assertEquals(nonZero1, NumberUtils.createNumber(nonZero1.toString()));
-        assertEquals(nonZero1, NumberUtils.createNumber(nonZero1.toString() + "F"));
+        assertEquals(nonZero1, NumberUtils.createNumber(nonZero1 + "F"));
         // Smallest double is 4.9e-324.
         // Test a number with zero before and/or after the decimal place to hit edge cases.
         final BigDecimal nonZero2 = new BigDecimal("4.9e-325");
@@ -715,10 +721,10 @@ public class NumberUtilsTest extends AbstractLangTest {
         }
     }
 
-    private static void assertCreateNumberZero(final String number, final Object zero, final Object negativeZero) {
-        assertEquals(zero, NumberUtils.createNumber(number), () -> "Input: " + number);
-        assertEquals(zero, NumberUtils.createNumber("+" + number), () -> "Input: +" + number);
-        assertEquals(negativeZero, NumberUtils.createNumber("-" + number), () -> "Input: -" + number);
+    @Test
+    public void testInvalidNumber() {
+        assertThrows(NumberFormatException.class, () -> NumberUtils.createNumber("E123e.3"));
+        assertThrows(NumberFormatException.class, () -> NumberUtils.createNumber("-"));
     }
 
     /**
@@ -1409,12 +1415,9 @@ public class NumberUtilsTest extends AbstractLangTest {
      */
     @Test
     public void testStringCreateNumberEnsureNoPrecisionLoss() {
-        final String shouldBeFloat = "1.23";
-        final String shouldBeDouble = "3.40282354e+38";
-        final String shouldBeBigDecimal = "1.797693134862315759e+308";
-        assertTrue(NumberUtils.createNumber(shouldBeFloat) instanceof Float);
-        assertTrue(NumberUtils.createNumber(shouldBeDouble) instanceof Double);
-        assertTrue(NumberUtils.createNumber(shouldBeBigDecimal) instanceof BigDecimal);
+        assertTrue(NumberUtils.createNumber("1.23") instanceof Float);
+        assertTrue(NumberUtils.createNumber("3.40282354e+38") instanceof Double);
+        assertTrue(NumberUtils.createNumber("1.797693134862315759e+308") instanceof BigDecimal);
         // LANG-1060
         assertTrue(NumberUtils.createNumber("001.12") instanceof Float);
         assertTrue(NumberUtils.createNumber("-001.12") instanceof Float);
@@ -1426,15 +1429,15 @@ public class NumberUtilsTest extends AbstractLangTest {
         assertTrue(NumberUtils.createNumber("-001.797693134862315759e+308") instanceof BigDecimal);
         assertTrue(NumberUtils.createNumber("+001.797693134862315759e+308") instanceof BigDecimal);
         //LANG-1613
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MIN_NORMAL)) instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MIN_NORMAL) + "D") instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MIN_NORMAL) + "F") instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MIN_VALUE)) instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MIN_VALUE) + "D") instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MIN_VALUE) + "F") instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MAX_VALUE)) instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MAX_VALUE) + "D") instanceof Double);
-        assertTrue(NumberUtils.createNumber(Double.toString(Double.MAX_VALUE) + "F") instanceof Double);
+        assertTrue(NumberUtils.createNumber("2.2250738585072014E-308") instanceof Double);
+        assertTrue(NumberUtils.createNumber("2.2250738585072014E-308D") instanceof Double);
+        assertTrue(NumberUtils.createNumber("2.2250738585072014E-308F") instanceof Double);
+        assertTrue(NumberUtils.createNumber("4.9E-324") instanceof Double);
+        assertTrue(NumberUtils.createNumber("4.9E-324D") instanceof Double);
+        assertTrue(NumberUtils.createNumber("4.9E-324F") instanceof Double);
+        assertTrue(NumberUtils.createNumber("1.7976931348623157E308") instanceof Double);
+        assertTrue(NumberUtils.createNumber("1.7976931348623157E308D") instanceof Double);
+        assertTrue(NumberUtils.createNumber("1.7976931348623157E308F") instanceof Double);
         assertTrue(NumberUtils.createNumber("4.9e-324D") instanceof Double);
         assertTrue(NumberUtils.createNumber("4.9e-324F") instanceof Double);
     }

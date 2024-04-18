@@ -29,7 +29,7 @@ import java.util.Objects;
  */
 public class ClassLoaderUtils {
 
-    private static final URL[] EMPTY_URL_ARRAY = new URL[] {};
+    private static final URL[] EMPTY_URL_ARRAY = {};
 
     /**
      * Gets the system class loader's URLs, if any.
@@ -76,5 +76,15 @@ public class ClassLoaderUtils {
      */
     public static String toString(final URLClassLoader classLoader) {
         return classLoader != null ? classLoader + Arrays.toString(classLoader.getURLs()) : "null";
+    }
+
+    /**
+     * Make private in 4.0.
+     *
+     * @deprecated TODO Make private in 4.0.
+     */
+    @Deprecated
+    public ClassLoaderUtils() {
+        // empty
     }
 }

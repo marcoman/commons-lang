@@ -118,7 +118,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      *
      * @since 2.3
      */
-    private static final ThreadLocal<Set<IDKey>> REGISTRY = new ThreadLocal<>();
+    private static final ThreadLocal<Set<IDKey>> REGISTRY = ThreadLocal.withInitial(HashSet::new);
 
     /*
      * NOTE: we cannot store the actual objects in a HashSet, as that would use the very hashCode()
@@ -467,12 +467,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      *            The object to register.
      */
     private static void register(final Object value) {
-        Set<IDKey> registry = getRegistry();
-        if (registry == null) {
-            registry = new HashSet<>();
-            REGISTRY.set(registry);
-        }
-        registry.add(new IDKey(value));
+        getRegistry().add(new IDKey(value));
     }
 
     /**
@@ -480,6 +475,7 @@ public class HashCodeBuilder implements Builder<Integer> {
      *
      * <p>
      * Used by the reflection methods to avoid infinite loops.
+     * </p>
      *
      * @param value
      *            The object to unregister.
@@ -487,11 +483,9 @@ public class HashCodeBuilder implements Builder<Integer> {
      */
     private static void unregister(final Object value) {
         final Set<IDKey> registry = getRegistry();
-        if (registry != null) {
-            registry.remove(new IDKey(value));
-            if (registry.isEmpty()) {
-                REGISTRY.remove();
-            }
+        registry.remove(new IDKey(value));
+        if (registry.isEmpty()) {
+            REGISTRY.remove();
         }
     }
 
@@ -507,7 +501,6 @@ public class HashCodeBuilder implements Builder<Integer> {
 
     /**
      * Uses two hard coded choices for the constants needed to build a {@code hashCode}.
-     *
      */
     public HashCodeBuilder() {
         iConstant = 37;
@@ -543,9 +536,9 @@ public class HashCodeBuilder implements Builder<Integer> {
      * This adds {@code 1} when true, and {@code 0} when false to the {@code hashCode}.
      * </p>
      * <p>
-     * This is in contrast to the standard {@code java.lang.Boolean.hashCode} handling, which computes
-     * a {@code hashCode} value of {@code 1231} for {@code java.lang.Boolean} instances
-     * that represent {@code true} or {@code 1237} for {@code java.lang.Boolean} instances
+     * This is in contrast to the standard {@link Boolean#hashCode()} handling, which computes
+     * a {@code hashCode} value of {@code 1231} for {@link Boolean} instances
+     * that represent {@code true} or {@code 1237} for {@link Boolean} instances
      * that represent {@code false}.
      * </p>
      * <p>

@@ -36,24 +36,33 @@
     </Or>
   </Match>
 
+  <Match>
+    <!-- TODO ? -->
+    <Bug pattern="CT_CONSTRUCTOR_THROW" />
+  </Match>
+
   <!-- TODO Can any of these be done without breaking binary compatibility? -->
   <Match>
     <Class name="org.apache.commons.lang3.reflect.FieldUtils" />
     <Bug pattern="REFLF_REFLECTION_MAY_INCREASE_ACCESSIBILITY_OF_FIELD" />
   </Match>
 
-  <!-- https://github.com/spotbugs/spotbugs/issues/1504 -->
+  <!-- TODO Cannot be done without breaking binary compat. -->
   <Match>
-    <Class name="org.apache.commons.lang3.ArrayUtils" />
-    <Method name="shuffle" />
-    <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+    <Class name="org.apache.commons.lang3.tuple.MutablePair" />
+    <Bug pattern="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" />
   </Match>
 
-  <!-- https://github.com/spotbugs/spotbugs/issues/1504 -->
+  <!-- TODO Cannot be done without breaking binary compat. -->
   <Match>
-    <Class name="org.apache.commons.lang3.RandomStringUtils" />
-    <Method name="random" />
-    <Bug pattern="DMI_RANDOM_USED_ONLY_ONCE" />
+    <Class name="org.apache.commons.lang3.tuple.MutableTriple" />
+    <Bug pattern="PA_PUBLIC_PRIMITIVE_ATTRIBUTE" />
+  </Match>
+
+  <!-- https://github.com/spotbugs/spotbugs/issues/2710 -->
+  <Match>
+  <Class name="org.apache.commons.lang3.ThreadUtils$ThreadIdPredicate" />
+    <Bug pattern="CT_CONSTRUCTOR_THROW" />
   </Match>
 
   <Match>

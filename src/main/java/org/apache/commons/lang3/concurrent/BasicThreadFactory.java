@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * An implementation of the {@link ThreadFactory} interface that provides some
  * configuration options for the threads it creates.
- *
  * <p>
  * A {@link ThreadFactory} is used for instance by an {@link ExecutorService} to
  * create the threads it uses for executing tasks. In many cases users do not
@@ -54,7 +53,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * threads. This can impact the exit behavior of the current Java application
  * because the JVM shuts down if there are only daemon threads running.</li>
  * <li>The priority of the thread. Here an integer value can be provided. The
- * {@code java.lang.Thread} class defines constants for valid ranges of priority
+ * {@link Thread} class defines constants for valid ranges of priority
  * values.</li>
  * <li>The {@link UncaughtExceptionHandler} for the thread. This handler is
  * called if an uncaught exception occurs within the thread.</li>
@@ -89,6 +88,133 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 3.0
  */
 public class BasicThreadFactory implements ThreadFactory {
+
+    /**
+     * A <em>builder</em> class for creating instances of {@code
+     * BasicThreadFactory}.
+     * <p>
+     * Using this builder class instances of {@link BasicThreadFactory} can be
+     * created and initialized. The class provides methods that correspond to
+     * the configuration options supported by {@link BasicThreadFactory}. Method
+     * chaining is supported. Refer to the documentation of {@code
+     * BasicThreadFactory} for a usage example.
+     * </p>
+     */
+    public static class Builder
+        implements org.apache.commons.lang3.builder.Builder<BasicThreadFactory> {
+
+        /** The wrapped factory. */
+        private ThreadFactory factory;
+
+        /** The uncaught exception handler. */
+        private Thread.UncaughtExceptionHandler exceptionHandler;
+
+        /** The naming pattern. */
+        private String namingPattern;
+
+        /** The priority. */
+        private Integer priority;
+
+        /** The daemon flag. */
+        private Boolean daemon;
+
+        /**
+         * Creates a new {@link BasicThreadFactory} with all configuration
+         * options that have been specified by calling methods on this builder.
+         * After creating the factory {@link #reset()} is called.
+         *
+         * @return the new {@link BasicThreadFactory}
+         */
+        @Override
+        public BasicThreadFactory build() {
+            final BasicThreadFactory factory = new BasicThreadFactory(this);
+            reset();
+            return factory;
+        }
+
+        /**
+         * Sets the daemon flag for the new {@link BasicThreadFactory}. If this
+         * flag is set to <b>true</b> the new thread factory will create daemon
+         * threads.
+         *
+         * @param daemon the value of the daemon flag
+         * @return a reference to this {@link Builder}
+         */
+        public Builder daemon(final boolean daemon) {
+            this.daemon = Boolean.valueOf(daemon);
+            return this;
+        }
+
+        /**
+         * Sets the naming pattern to be used by the new {@code
+         * BasicThreadFactory}.
+         *
+         * @param namingPattern the naming pattern (must not be <b>null</b>)
+         * @return a reference to this {@link Builder}
+         * @throws NullPointerException if the naming pattern is <b>null</b>
+         */
+        public Builder namingPattern(final String namingPattern) {
+            this.namingPattern = Objects.requireNonNull(namingPattern, "pattern");
+            return this;
+        }
+
+        /**
+         * Sets the priority for the threads created by the new {@code
+         * BasicThreadFactory}.
+         *
+         * @param priority the priority
+         * @return a reference to this {@link Builder}
+         */
+        public Builder priority(final int priority) {
+            this.priority = Integer.valueOf(priority);
+            return this;
+        }
+
+        /**
+         * Resets this builder. All configuration options are set to default
+         * values. Note: If the {@link #build()} method was called, it is not
+         * necessary to call {@code reset()} explicitly because this is done
+         * automatically.
+         */
+        public void reset() {
+            factory = null;
+            exceptionHandler = null;
+            namingPattern = null;
+            priority = null;
+            daemon = null;
+        }
+
+        /**
+         * Sets the uncaught exception handler for the threads created by the
+         * new {@link BasicThreadFactory}.
+         *
+         * @param exceptionHandler the {@link UncaughtExceptionHandler} (must not be
+         * <b>null</b>)
+         * @return a reference to this {@link Builder}
+         * @throws NullPointerException if the exception handler is <b>null</b>
+         */
+        public Builder uncaughtExceptionHandler(
+                final Thread.UncaughtExceptionHandler exceptionHandler) {
+            this.exceptionHandler = Objects.requireNonNull(exceptionHandler, "handler");
+            return this;
+        }
+
+        /**
+         * Sets the {@link ThreadFactory} to be wrapped by the new {@code
+         * BasicThreadFactory}.
+         *
+         * @param factory the wrapped {@link ThreadFactory} (must not be
+         * <b>null</b>)
+         * @return a reference to this {@link Builder}
+         * @throws NullPointerException if the passed in {@link ThreadFactory}
+         * is <b>null</b>
+         */
+        public Builder wrappedFactory(final ThreadFactory factory) {
+            this.factory = Objects.requireNonNull(factory, "factory");
+            return this;
+        }
+    }
+
     /** A counter for the threads created by this factory. */
     private final AtomicLong threadCounter;
 
@@ -114,44 +240,16 @@ public class BasicThreadFactory implements ThreadFactory {
      * @param builder the {@link Builder} object
      */
     private BasicThreadFactory(final Builder builder) {
-        if (builder.wrappedFactory == null) {
-            wrappedFactory = Executors.defaultThreadFactory();
-        } else {
-            wrappedFactory = builder.wrappedFactory;
-        }
-
+        wrappedFactory = builder.factory != null ? builder.factory : Executors.defaultThreadFactory();
         namingPattern = builder.namingPattern;
         priority = builder.priority;
         daemon = builder.daemon;
         uncaughtExceptionHandler = builder.exceptionHandler;
-
         threadCounter = new AtomicLong();
     }
 
     /**
-     * Returns the wrapped {@link ThreadFactory}. This factory is used for
-     * actually creating threads. This method never returns <b>null</b>. If no
-     * {@link ThreadFactory} was passed when this object was created, a default
-     * thread factory is returned.
-     *
-     * @return the wrapped {@link ThreadFactory}
-     */
-    public final ThreadFactory getWrappedFactory() {
-        return wrappedFactory;
-    }
-
-    /**
-     * Returns the naming pattern for naming newly created threads. Result can
-     * be <b>null</b> if no naming pattern was provided.
-     *
-     * @return the naming pattern
-     */
-    public final String getNamingPattern() {
-        return namingPattern;
-    }
-
-    /**
-     * Returns the daemon flag. This flag determines whether newly created
+     * Gets the daemon flag. This flag determines whether newly created
      * threads should be daemon threads. If <b>true</b>, this factory object
      * calls {@code setDaemon(true)} on the newly created threads. Result can be
      * <b>null</b> if no daemon flag was provided at creation time.
@@ -163,7 +261,17 @@ public class BasicThreadFactory implements ThreadFactory {
     }
 
     /**
-     * Returns the priority of the threads created by this factory. Result can
+     * Gets the naming pattern for naming newly created threads. Result can
+     * be <b>null</b> if no naming pattern was provided.
+     *
+     * @return the naming pattern
+     */
+    public final String getNamingPattern() {
+        return namingPattern;
+    }
+
+    /**
+     * Gets the priority of the threads created by this factory. Result can
      * be <b>null</b> if no priority was specified.
      *
      * @return the priority for newly created threads
@@ -173,7 +281,18 @@ public class BasicThreadFactory implements ThreadFactory {
     }
 
     /**
-     * Returns the {@link UncaughtExceptionHandler} for the threads created by
+     * Gets the number of threads this factory has already created. This
+     * class maintains an internal counter that is incremented each time the
+     * {@link #newThread(Runnable)} method is invoked.
+     *
+     * @return the number of threads created by this factory
+     */
+    public long getThreadCount() {
+        return threadCounter.get();
+    }
+
+    /**
+     * Gets the {@link UncaughtExceptionHandler} for the threads created by
      * this factory. Result can be <b>null</b> if no handler was provided.
      *
      * @return the {@link UncaughtExceptionHandler}
@@ -183,14 +302,39 @@ public class BasicThreadFactory implements ThreadFactory {
     }
 
     /**
-     * Returns the number of threads this factory has already created. This
-     * class maintains an internal counter that is incremented each time the
-     * {@link #newThread(Runnable)} method is invoked.
+     * Gets the wrapped {@link ThreadFactory}. This factory is used for
+     * actually creating threads. This method never returns <b>null</b>. If no
+     * {@link ThreadFactory} was passed when this object was created, a default
+     * thread factory is returned.
      *
-     * @return the number of threads created by this factory
+     * @return the wrapped {@link ThreadFactory}
      */
-    public long getThreadCount() {
-        return threadCounter.get();
+    public final ThreadFactory getWrappedFactory() {
+        return wrappedFactory;
+    }
+
+    /**
+     * Initializes the specified thread. This method is called by
+     * {@link #newThread(Runnable)} after a new thread has been obtained from
+     * the wrapped thread factory. It initializes the thread according to the
+     * options set for this factory.
+     *
+     * @param thread the thread to be initialized
+     */
+    private void initializeThread(final Thread thread) {
+        if (getNamingPattern() != null) {
+            final Long count = Long.valueOf(threadCounter.incrementAndGet());
+            thread.setName(String.format(getNamingPattern(), count));
+        }
+        if (getUncaughtExceptionHandler() != null) {
+            thread.setUncaughtExceptionHandler(getUncaughtExceptionHandler());
+        }
+        if (getPriority() != null) {
+            thread.setPriority(getPriority().intValue());
+        }
+        if (getDaemonFlag() != null) {
+            thread.setDaemon(getDaemonFlag().booleanValue());
+        }
     }
 
     /**
@@ -205,169 +349,6 @@ public class BasicThreadFactory implements ThreadFactory {
     public Thread newThread(final Runnable runnable) {
         final Thread thread = getWrappedFactory().newThread(runnable);
         initializeThread(thread);
-
         return thread;
-    }
-
-    /**
-     * Initializes the specified thread. This method is called by
-     * {@link #newThread(Runnable)} after a new thread has been obtained from
-     * the wrapped thread factory. It initializes the thread according to the
-     * options set for this factory.
-     *
-     * @param thread the thread to be initialized
-     */
-    private void initializeThread(final Thread thread) {
-
-        if (getNamingPattern() != null) {
-            final Long count = Long.valueOf(threadCounter.incrementAndGet());
-            thread.setName(String.format(getNamingPattern(), count));
-        }
-
-        if (getUncaughtExceptionHandler() != null) {
-            thread.setUncaughtExceptionHandler(getUncaughtExceptionHandler());
-        }
-
-        if (getPriority() != null) {
-            thread.setPriority(getPriority().intValue());
-        }
-
-        if (getDaemonFlag() != null) {
-            thread.setDaemon(getDaemonFlag().booleanValue());
-        }
-    }
-
-    /**
-     * A <em>builder</em> class for creating instances of {@code
-     * BasicThreadFactory}.
-     *
-     * <p>
-     * Using this builder class instances of {@link BasicThreadFactory} can be
-     * created and initialized. The class provides methods that correspond to
-     * the configuration options supported by {@link BasicThreadFactory}. Method
-     * chaining is supported. Refer to the documentation of {@code
-     * BasicThreadFactory} for a usage example.
-     * </p>
-     *
-     */
-    public static class Builder
-        implements org.apache.commons.lang3.builder.Builder<BasicThreadFactory> {
-
-        /** The wrapped factory. */
-        private ThreadFactory wrappedFactory;
-
-        /** The uncaught exception handler. */
-        private Thread.UncaughtExceptionHandler exceptionHandler;
-
-        /** The naming pattern. */
-        private String namingPattern;
-
-        /** The priority. */
-        private Integer priority;
-
-        /** The daemon flag. */
-        private Boolean daemon;
-
-        /**
-         * Sets the {@link ThreadFactory} to be wrapped by the new {@code
-         * BasicThreadFactory}.
-         *
-         * @param factory the wrapped {@link ThreadFactory} (must not be
-         * <b>null</b>)
-         * @return a reference to this {@link Builder}
-         * @throws NullPointerException if the passed in {@link ThreadFactory}
-         * is <b>null</b>
-         */
-        public Builder wrappedFactory(final ThreadFactory factory) {
-            Objects.requireNonNull(factory, "factory");
-
-            wrappedFactory = factory;
-            return this;
-        }
-
-        /**
-         * Sets the naming pattern to be used by the new {@code
-         * BasicThreadFactory}.
-         *
-         * @param pattern the naming pattern (must not be <b>null</b>)
-         * @return a reference to this {@link Builder}
-         * @throws NullPointerException if the naming pattern is <b>null</b>
-         */
-        public Builder namingPattern(final String pattern) {
-            Objects.requireNonNull(pattern, "pattern");
-
-            namingPattern = pattern;
-            return this;
-        }
-
-        /**
-         * Sets the daemon flag for the new {@link BasicThreadFactory}. If this
-         * flag is set to <b>true</b> the new thread factory will create daemon
-         * threads.
-         *
-         * @param daemon the value of the daemon flag
-         * @return a reference to this {@link Builder}
-         */
-        public Builder daemon(final boolean daemon) {
-            this.daemon = Boolean.valueOf(daemon);
-            return this;
-        }
-
-        /**
-         * Sets the priority for the threads created by the new {@code
-         * BasicThreadFactory}.
-         *
-         * @param priority the priority
-         * @return a reference to this {@link Builder}
-         */
-        public Builder priority(final int priority) {
-            this.priority = Integer.valueOf(priority);
-            return this;
-        }
-
-        /**
-         * Sets the uncaught exception handler for the threads created by the
-         * new {@link BasicThreadFactory}.
-         *
-         * @param handler the {@link UncaughtExceptionHandler} (must not be
-         * <b>null</b>)
-         * @return a reference to this {@link Builder}
-         * @throws NullPointerException if the exception handler is <b>null</b>
-         */
-        public Builder uncaughtExceptionHandler(
-                final Thread.UncaughtExceptionHandler handler) {
-            Objects.requireNonNull(handler, "handler");
-
-            exceptionHandler = handler;
-            return this;
-        }
-
-        /**
-         * Resets this builder. All configuration options are set to default
-         * values. Note: If the {@link #build()} method was called, it is not
-         * necessary to call {@code reset()} explicitly because this is done
-         * automatically.
-         */
-        public void reset() {
-            wrappedFactory = null;
-            exceptionHandler = null;
-            namingPattern = null;
-            priority = null;
-            daemon = null;
-        }
-
-        /**
-         * Creates a new {@link BasicThreadFactory} with all configuration
-         * options that have been specified by calling methods on this builder.
-         * After creating the factory {@link #reset()} is called.
-         *
-         * @return the new {@link BasicThreadFactory}
-         */
-        @Override
-        public BasicThreadFactory build() {
-            final BasicThreadFactory factory = new BasicThreadFactory(this);
-            reset();
-            return factory;
-        }
     }
 }

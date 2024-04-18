@@ -53,11 +53,33 @@ import org.junit.jupiter.api.Test;
  */
 public class SystemUtilsTest extends AbstractLangTest {
 
+    /**
+     * Returns the value of the SystemUtils.IS_JAVA_X field for the versions >= 9.
+     */
+    private boolean getIS_JAVA(final int version) throws Exception {
+        return SystemUtils.class.getField("IS_JAVA_" + version).getBoolean(null);
+    }
+
+    /**
+     * Returns the last supported version with the SystemUtils.IS_JAVA_X fields.
+     */
+    public int getLastSupportedJavaVersion() {
+        int lastSupportedVersion = 0;
+
+        for (final Field field : SystemUtils.class.getFields()) {
+            if (field.getName().matches("IS_JAVA_\\d+")) {
+                lastSupportedVersion = Math.max(lastSupportedVersion, Integer.parseInt(field.getName().substring(8)));
+            }
+        }
+
+        return lastSupportedVersion;
+    }
+
     @Test
     @SuppressWarnings("deprecation")
     public void test_IS_JAVA() throws Exception {
-        String javaVersion = SystemUtils.JAVA_VERSION;
-        int lastSupportedVersion = getLastSupportedJavaVersion();
+        final String javaVersion = SystemUtils.JAVA_VERSION;
+        final int lastSupportedVersion = getLastSupportedJavaVersion();
 
         if (javaVersion == null) {
             assertFalse(SystemUtils.IS_JAVA_1_1);
@@ -107,28 +129,6 @@ public class SystemUtilsTest extends AbstractLangTest {
         } else {
             System.out.println("Can't test IS_JAVA value: " + javaVersion);
         }
-    }
-
-    /**
-     * Returns the value of the SystemUtils.IS_JAVA_X field for the versions >= 9.
-     */
-    private boolean getIS_JAVA(int version) throws Exception {
-        return SystemUtils.class.getField("IS_JAVA_" + version).getBoolean(null);
-    }
-
-    /**
-     * Returns the last supported version with the SystemUtils.IS_JAVA_X fields.
-     */
-    public int getLastSupportedJavaVersion() {
-        int lastSupportedVersion = 0;
-
-        for (Field field : SystemUtils.class.getFields()) {
-            if (field.getName().matches("IS_JAVA_\\d+")) {
-                lastSupportedVersion = Math.max(lastSupportedVersion, Integer.parseInt(field.getName().substring(8)));
-            }
-        }
-
-        return lastSupportedVersion;
     }
 
     @Test

@@ -82,7 +82,7 @@ public class DateUtilsTest extends AbstractLangTest {
     private static void assertWeekIterator(final Iterator<?> it, final Calendar start, final Calendar end) {
         Calendar cal = (Calendar) it.next();
         assertCalendarsEquals("", start, cal, 0);
-        Calendar last = null;
+        Calendar last;
         int count = 1;
         while (it.hasNext()) {
             //Check this is just a date (no time component)
@@ -789,7 +789,7 @@ public class DateUtilsTest extends AbstractLangTest {
         assertThrows(ClassCastException.class, () -> DateUtils.iterator("", DateUtils.RANGE_WEEK_CENTER));
     }
 
-    /** https://issues.apache.org/jira/browse/LANG-530 */
+    /** See https://issues.apache.org/jira/browse/LANG-530 */
     @SuppressWarnings("deprecation")
     @Test
     public void testLang530() throws ParseException {
@@ -955,7 +955,6 @@ public class DateUtilsTest extends AbstractLangTest {
         assertEquals(dateParser.parse("November 16, 2001"),
                 DateUtils.round(date2, DateUtils.SEMI_MONTH),
                 "round semimonth-2 failed");
-
 
         assertEquals(dateParser.parse("February 13, 2002"),
                 DateUtils.round(date1, Calendar.DATE),

@@ -6,7 +6,7 @@
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,16 +15,23 @@
  * limitations under the License.
  */
 
+package org.apache.commons.lang3.builder;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import org.junit.jupiter.api.Test;
+
 /**
- * Provides functional interfaces to complement those in {@code java.lang.function} and utilities for working with Java
- * 8 lambdas.
- *
- * <p>
- * Contains failable functional interfaces that address the fact that lambdas are supposed not to throw Exceptions, at
- * least not checked Exceptions, A.K.A. instances of {@link Exception}. A failable functional interface
- * declares a type of Exception that may be raised if the function fails.
- * </p>
- *
- * @since 3.11
+ * Tests {@link IDKey}.
  */
-package org.apache.commons.lang3.function;
+public class IDKeyTest {
+
+    @Test
+    public void testEquals() {
+        assertEquals(new IDKey("1"), new IDKey("1"));
+        assertNotEquals(new IDKey("1"), new IDKey("2"));
+        assertNotEquals(new IDKey("1"), "2");
+    }
+
+}

@@ -41,7 +41,7 @@ import org.apache.commons.lang3.Validate;
  * <pre>
  * List&lt;String&gt; listOfString = typesafe.obtain(List.class, ...); // could only give us a raw List
  * </pre>
- * {@code java.lang.reflect.Type} might provide some value:
+ * {@link java.lang.reflect.Type} might provide some value:
  * <pre>
  * Type listOfStringType = ...; // firstly, how to obtain this? Doable, but not straightforward.
  * List&lt;String&gt; listOfString = (List&lt;String&gt;) typesafe.obtain(listOfStringType, ...); // nongeneric Type would necessitate a cast
@@ -57,7 +57,7 @@ import org.apache.commons.lang3.Validate;
  * List&lt;String&gt; listOfString = typesafe.obtain(new TypeLiteral&lt;List&lt;String&gt;&gt;() {}, ...);
  * </pre>
  * <p>
- * This has the effect of "jumping up" a level to tie a {@code java.lang.reflect.Type}
+ * This has the effect of "jumping up" a level to tie a {@link java.lang.reflect.Type}
  * to a type variable while simultaneously making it short work to obtain a
  * {@link Type} instance for any given type, inline.
  * </p>
@@ -108,6 +108,11 @@ public abstract class TypeLiteral<T> implements Typed<T> {
     }
 
     @Override
+    public Type getType() {
+        return value;
+    }
+
+    @Override
     public int hashCode() {
         return 37 << 4 | value.hashCode();
     }
@@ -115,10 +120,5 @@ public abstract class TypeLiteral<T> implements Typed<T> {
     @Override
     public String toString() {
         return toString;
-    }
-
-    @Override
-    public Type getType() {
-        return value;
     }
 }

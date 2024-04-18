@@ -136,6 +136,7 @@ public class BooleanUtils {
 
     /**
      * Returns a new array of possible values (like an enum would).
+     *
      * @return a new array of possible values (like an enum would).
      * @since 3.12.0
      */
@@ -478,7 +479,7 @@ public class BooleanUtils {
     }
 
     /**
-     * Converts a String to a boolean (optimised for performance).
+     * Converts a String to a boolean (optimized for performance).
      *
      * <p>{@code 'true'}, {@code 'on'}, {@code 'y'}, {@code 't'} or {@code 'yes'}
      * (case insensitive) will return {@code true}. Otherwise,
@@ -1212,8 +1213,12 @@ public class BooleanUtils {
      *
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.</p>
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public BooleanUtils() {
+        // empty
     }
 
 }

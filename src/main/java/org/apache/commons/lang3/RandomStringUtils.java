@@ -455,7 +455,6 @@ public class RandomStringUtils {
         return random(count, 32, 126, false, false);
     }
 
-
     /**
      * Creates a random string whose length is between the inclusive minimum and
      * the exclusive maximum.
@@ -478,8 +477,12 @@ public class RandomStringUtils {
      *
      * <p>This constructor is public to permit tools that require a JavaBean instance
      * to operate.</p>
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public RandomStringUtils() {
+        // empty
     }
 
 }

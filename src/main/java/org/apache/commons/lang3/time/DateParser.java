@@ -36,6 +36,33 @@ import java.util.TimeZone;
 public interface DateParser {
 
     /**
+     * Gets the locale used by this parser.
+     *
+     * @return the locale
+     */
+    Locale getLocale();
+
+    // Accessors
+    /**
+     * Gets the pattern used by this parser.
+     *
+     * @return the pattern, {@link java.text.SimpleDateFormat} compatible
+     */
+    String getPattern();
+
+    /**
+     * Gets the time zone used by this parser.
+     *
+     * <p>
+     * The default {@link TimeZone} used to create a {@link Date} when the {@link TimeZone} is not specified by
+     * the format pattern.
+     * </p>
+     *
+     * @return the time zone
+     */
+    TimeZone getTimeZone();
+
+    /**
      * Equivalent to DateFormat.parse(String).
      *
      * See {@link java.text.DateFormat#parse(String)} for more information.
@@ -75,38 +102,11 @@ public interface DateParser {
      */
     boolean parse(String source, ParsePosition pos, Calendar calendar);
 
-    // Accessors
-    /**
-     * Gets the pattern used by this parser.
-     *
-     * @return the pattern, {@link java.text.SimpleDateFormat} compatible
-     */
-    String getPattern();
-
-    /**
-     * Gets the time zone used by this parser.
-     *
-     * <p>
-     * The default {@link TimeZone} used to create a {@link Date} when the {@link TimeZone} is not specified by
-     * the format pattern.
-     * </p>
-     *
-     * @return the time zone
-     */
-    TimeZone getTimeZone();
-
-    /**
-     * Gets the locale used by this parser.
-     *
-     * @return the locale
-     */
-    Locale getLocale();
-
     /**
      * Parses text from a string to produce a Date.
      *
      * @param source A {@link String} whose beginning should be parsed.
-     * @return a {@code java.util.Date} object
+     * @return a {@link java.util.Date} object
      * @throws ParseException if the beginning of the specified string cannot be parsed.
      * @see java.text.DateFormat#parseObject(String)
      */
@@ -117,7 +117,7 @@ public interface DateParser {
      *
      * @param source A {@link String} whose beginning should be parsed.
      * @param pos the parse position
-     * @return a {@code java.util.Date} object
+     * @return a {@link java.util.Date} object
      * @see java.text.DateFormat#parseObject(String, ParsePosition)
      */
     Object parseObject(String source, ParsePosition pos);

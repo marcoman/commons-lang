@@ -233,7 +233,7 @@ public class StopWatch {
     private long stopTimeNanos;
 
     /**
-     * Constructor.
+     * Constructs a new instance.
      */
     public StopWatch() {
         this(null);
@@ -434,7 +434,7 @@ public class StopWatch {
      * @param nanos nanoseconds to convert.
      * @return milliseconds conversion result.
      */
-    private long nanosToMillis(long nanos) {
+    private long nanosToMillis(final long nanos) {
         return nanos / NANO_2_MILLIS;
     }
 

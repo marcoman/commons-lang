@@ -35,15 +35,15 @@ import org.junit.jupiter.api.Test;
 public class ComparableUtilsTest extends AbstractLangTest {
 
     @Nested
-    class A_is_1 {
+    final class A_is_1 {
 
         @DisplayName("B is 0 (B < A)")
         @Nested
-        class B_is_0 {
+        final class B_is_0 {
 
             @DisplayName("C is 0 ([B=C] < A)")
             @Nested
-            class C_is_0 {
+            final class C_is_0 {
 
                 BigDecimal c = BigDecimal.ZERO;
 
@@ -71,7 +71,7 @@ public class ComparableUtilsTest extends AbstractLangTest {
 
             @DisplayName("C is 1 (B < A = C)")
             @Nested
-            class C_is_1 {
+            final class C_is_1 {
 
                 BigDecimal c = BigDecimal.ONE;
 
@@ -98,7 +98,7 @@ public class ComparableUtilsTest extends AbstractLangTest {
 
             @DisplayName("C is 10 (B < A < C)")
             @Nested
-            class C_is_10 {
+            final class C_is_10 {
 
                 BigDecimal c = BigDecimal.TEN;
 
@@ -151,33 +151,33 @@ public class ComparableUtilsTest extends AbstractLangTest {
             }
 
             @Test
-            void static_gt_returns_true() {
-                assertTrue(ComparableUtils.gt(b).test(a));
-            }
-
-            @Test
             void static_ge_returns_true() {
                 assertTrue(ComparableUtils.ge(b).test(a));
             }
 
             @Test
-            void static_lt_returns_false() {
-                assertFalse(ComparableUtils.lt(b).test(a));
+            void static_gt_returns_true() {
+                assertTrue(ComparableUtils.gt(b).test(a));
             }
 
             @Test
             void static_le_returns_false() {
                 assertFalse(ComparableUtils.le(b).test(a));
             }
+
+            @Test
+            void static_lt_returns_false() {
+                assertFalse(ComparableUtils.lt(b).test(a));
+            }
         }
 
         @DisplayName("B is 1 (B = A)")
         @Nested
-        class B_is_1 {
+        final class B_is_1 {
 
             @DisplayName("C is 0 (B = A > C)")
             @Nested
-            class C_is_0 {
+            final class C_is_0 {
 
                 BigDecimal c = BigDecimal.ZERO;
 
@@ -204,7 +204,7 @@ public class ComparableUtilsTest extends AbstractLangTest {
 
             @DisplayName("C is 1 (B = A = C)")
             @Nested
-            class C_is_1 {
+            final class C_is_1 {
 
                 BigDecimal c = BigDecimal.ONE;
 
@@ -231,7 +231,7 @@ public class ComparableUtilsTest extends AbstractLangTest {
 
             @DisplayName("C is 10 (B = A < C)")
             @Nested
-            class C_is_10 {
+            final class C_is_10 {
 
                 BigDecimal c = BigDecimal.TEN;
 
@@ -284,33 +284,33 @@ public class ComparableUtilsTest extends AbstractLangTest {
             }
 
             @Test
-            void static_gt_returns_false() {
-                assertFalse(ComparableUtils.gt(b).test(a));
-            }
-
-            @Test
             void static_ge_returns_true() {
                 assertTrue(ComparableUtils.ge(b).test(a));
             }
 
             @Test
-            void static_lt_returns_false() {
-                assertFalse(ComparableUtils.lt(b).test(a));
+            void static_gt_returns_false() {
+                assertFalse(ComparableUtils.gt(b).test(a));
             }
 
             @Test
             void static_le_returns_true() {
                 assertTrue(ComparableUtils.le(b).test(a));
             }
+
+            @Test
+            void static_lt_returns_false() {
+                assertFalse(ComparableUtils.lt(b).test(a));
+            }
         }
 
         @DisplayName("B is 10 (B > A)")
         @Nested
-        class B_is_10 {
+        final class B_is_10 {
 
             @DisplayName("C is 0 (B > A > C)")
             @Nested
-            class C_is_0 {
+            final class C_is_0 {
 
                 BigDecimal c = BigDecimal.ZERO;
 
@@ -337,7 +337,7 @@ public class ComparableUtilsTest extends AbstractLangTest {
 
             @DisplayName("C is 1 (B > A = C)")
             @Nested
-            class C_is_1 {
+            final class C_is_1 {
 
                 BigDecimal c = BigDecimal.ONE;
 
@@ -364,7 +364,7 @@ public class ComparableUtilsTest extends AbstractLangTest {
 
             @DisplayName("C is 10 ([B,C] > A)")
             @Nested
-            class C_is_10 {
+            final class C_is_10 {
 
                 BigDecimal c = BigDecimal.TEN;
 
@@ -417,23 +417,23 @@ public class ComparableUtilsTest extends AbstractLangTest {
             }
 
             @Test
-            void static_gt_returns_false() {
-                assertFalse(ComparableUtils.gt(b).test(a));
-            }
-
-            @Test
             void static_ge_returns_false() {
                 assertFalse(ComparableUtils.ge(b).test(a));
             }
 
             @Test
-            void static_lt_returns_true() {
-                assertTrue(ComparableUtils.lt(b).test(a));
+            void static_gt_returns_false() {
+                assertFalse(ComparableUtils.gt(b).test(a));
             }
 
             @Test
             void static_le_returns_true() {
                 assertTrue(ComparableUtils.le(b).test(a));
+            }
+
+            @Test
+            void static_lt_returns_true() {
+                assertTrue(ComparableUtils.lt(b).test(a));
             }
         }
 

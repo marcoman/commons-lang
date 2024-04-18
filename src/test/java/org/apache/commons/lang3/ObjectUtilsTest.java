@@ -59,8 +59,6 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("deprecation") // deliberate use of deprecated code
 public class ObjectUtilsTest extends AbstractLangTest {
 
-    private static final Supplier<?> NULL_SUPPLIER = null;
-
     static final class CharSequenceComparator implements Comparator<CharSequence> {
 
         @Override
@@ -128,6 +126,8 @@ public class ObjectUtilsTest extends AbstractLangTest {
             super(s);
         }
     }
+
+    private static final Supplier<?> NULL_SUPPLIER = null;
 
     private static final String FOO = "foo";
     private static final String BAR = "bar";
@@ -563,7 +563,7 @@ public class ObjectUtilsTest extends AbstractLangTest {
 
         assertThrows(
                 NullPointerException.class,
-                () -> ObjectUtils.identityToString((Appendable) (new StringBuilder()), null));
+                () -> ObjectUtils.identityToString((Appendable) new StringBuilder(), null));
     }
 
     @Test

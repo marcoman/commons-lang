@@ -262,9 +262,7 @@ public class ObjectUtils {
                         + obj.getClass().getName(), e.getCause());
                 }
             }
-            @SuppressWarnings("unchecked") // OK because input is of type T
-            final T checked = (T) result;
-            return checked;
+            return (T) result;
         }
 
         return null;
@@ -684,7 +682,7 @@ public class ObjectUtils {
      * @param <T> the type of the return values
      * @param suppliers  the suppliers returning the values to test.
      *                   {@code null} values are ignored.
-     *                   Suppliers may return {@code null} or a value of type @{code T}
+     *                   Suppliers may return {@code null} or a value of type {@code T}
      * @return the first return value from {@code suppliers} which is not {@code null},
      *  or {@code null} if there are no non-null values
      * @since 3.10
@@ -755,7 +753,6 @@ public class ObjectUtils {
     public static String hashCodeHex(final Object object) {
         return Integer.toHexString(Objects.hashCode(object));
     }
-
 
     /**
      * Gets the hash code for multiple objects.
@@ -937,7 +934,6 @@ public class ObjectUtils {
               .append(hexString);
     }
 
-
     // Constants (LANG-816):
     /*
         These methods ensure constants are not inlined by javac.
@@ -1111,9 +1107,7 @@ public class ObjectUtils {
         Objects.requireNonNull(comparator, "comparator");
         final TreeSet<T> treeSet = new TreeSet<>(comparator);
         Collections.addAll(treeSet, items);
-        @SuppressWarnings("unchecked") //we know all items added were T instances
-        final T result = (T) treeSet.toArray()[(treeSet.size() - 1) / 2];
-        return result;
+        return (T) treeSet.toArray()[(treeSet.size() - 1) / 2];
     }
 
     /**
@@ -1132,9 +1126,7 @@ public class ObjectUtils {
         Validate.noNullElements(items);
         final TreeSet<T> sort = new TreeSet<>();
         Collections.addAll(sort, items);
-        @SuppressWarnings("unchecked") //we know all items added were T instances
-        final T result = (T) sort.toArray()[(sort.size() - 1) / 2];
-        return result;
+        return (T) sort.toArray()[(sort.size() - 1) / 2];
     }
 
     /**
@@ -1163,7 +1155,6 @@ public class ObjectUtils {
         }
         return result;
     }
-
 
     /**
      * Find the most frequently occurring item.
@@ -1334,6 +1325,30 @@ public class ObjectUtils {
     }
 
     /**
+     * Gets the {@code toString} of an {@link Supplier}'s {@link Supplier#get()} returning
+     * a specified text if {@code null} input.
+     *
+     * <pre>
+     * ObjectUtils.toString(() -&gt; obj, () -&gt; expensive())
+     * </pre>
+     * <pre>
+     * ObjectUtils.toString(() -&gt; null, () -&gt; expensive())         = result of expensive()
+     * ObjectUtils.toString(() -&gt; null, () -&gt; expensive())         = result of expensive()
+     * ObjectUtils.toString(() -&gt; "", () -&gt; expensive())           = ""
+     * ObjectUtils.toString(() -&gt; "bat", () -&gt; expensive())        = "bat"
+     * ObjectUtils.toString(() -&gt; Boolean.TRUE, () -&gt; expensive()) = "true"
+     * </pre>
+     *
+     * @param obj  the Object to {@code toString}, may be null
+     * @param supplier  the Supplier of String used on {@code null} input, may be null
+     * @return the passed in Object's toString, or {@code nullStr} if {@code null} input
+     * @since 3.14.0
+     */
+    public static String toString(final Supplier<Object> obj, final Supplier<String> supplier) {
+        return obj == null ? Suppliers.get(supplier) : toString(obj.get(), supplier);
+    }
+
+    /**
      * Gets the {@code toString} of an {@link Object} returning
      * a specified text if {@code null} input.
      *
@@ -1356,30 +1371,6 @@ public class ObjectUtils {
      */
     public static <T> String toString(final T obj, final Supplier<String> supplier) {
         return obj == null ? Suppliers.get(supplier) : obj.toString();
-    }
-
-    /**
-     * Gets the {@code toString} of an {@link Supplier}'s {@link Supplier#get()} returning
-     * a specified text if {@code null} input.
-     *
-     * <pre>
-     * ObjectUtils.toString(() -&gt; obj, () -&gt; expensive())
-     * </pre>
-     * <pre>
-     * ObjectUtils.toString(() -&gt; null, () -&gt; expensive())         = result of expensive()
-     * ObjectUtils.toString(() -&gt; null, () -&gt; expensive())         = result of expensive()
-     * ObjectUtils.toString(() -&gt; "", () -&gt; expensive())           = ""
-     * ObjectUtils.toString(() -&gt; "bat", () -&gt; expensive())        = "bat"
-     * ObjectUtils.toString(() -&gt; Boolean.TRUE, () -&gt; expensive()) = "true"
-     * </pre>
-     *
-     * @param obj  the Object to {@code toString}, may be null
-     * @param supplier  the Supplier of String used on {@code null} input, may be null
-     * @return the passed in Object's toString, or {@code nullStr} if {@code null} input
-     * @since 3.14.0
-     */
-    public static String toString(final Supplier<Object> obj, final Supplier<String> supplier) {
-        return obj == null ? Suppliers.get(supplier) : toString(obj.get(), supplier);
     }
 
     /**
@@ -1406,8 +1397,12 @@ public class ObjectUtils {
      *
      * <p>This constructor is public to permit tools that require a JavaBean
      * instance to operate.</p>
+     *
+     * @deprecated TODO Make private in 4.0.
      */
+    @Deprecated
     public ObjectUtils() {
+        // empty
     }
 
 }

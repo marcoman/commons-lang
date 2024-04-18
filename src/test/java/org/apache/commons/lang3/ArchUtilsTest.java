@@ -40,6 +40,8 @@ public class ArchUtilsTest extends AbstractLangTest {
     private static final String X86 = "x86";
     private static final String X86_64 = "x86_64";
     private static final String AARCH_64 = "aarch64";
+    private static final String RISCV_64 = "riscv64";
+    private static final String RISCV_32 = "riscv32";
 
     private void assertEqualsArchNotNull(final Processor.Arch arch, final Processor processor) {
         assertNotNull(arch);
@@ -100,6 +102,14 @@ public class ArchUtilsTest extends AbstractLangTest {
         processor = ArchUtils.getProcessor(AARCH_64);
         assertEqualsTypeNotNull(Processor.Type.AARCH_64, processor);
         assertTrue(processor.isAarch64());
+
+        processor = ArchUtils.getProcessor(RISCV_32);
+        assertEqualsTypeNotNull(Processor.Type.RISC_V, processor);
+        assertTrue(processor.isRISCV());
+
+        processor = ArchUtils.getProcessor(RISCV_64);
+        assertEqualsTypeNotNull(Processor.Type.RISC_V, processor);
+        assertTrue(processor.isRISCV());
     }
 
     @Test
@@ -107,14 +117,6 @@ public class ArchUtilsTest extends AbstractLangTest {
         for (final Arch arch : Arch.values()) {
             // Only test label presence.
             assertFalse(arch.getLabel().isEmpty());
-        }
-    }
-
-    @Test
-    public void testTypeLabels() {
-        for (final Type type : Type.values()) {
-            // Only test label presence.
-            assertFalse(type.getLabel().isEmpty());
         }
     }
 
@@ -142,6 +144,10 @@ public class ArchUtilsTest extends AbstractLangTest {
         assertEqualsArchNotNull(Processor.Arch.BIT_32, processor);
         processor.is32Bit();
 
+        processor = ArchUtils.getProcessor(RISCV_32);
+        assertEqualsArchNotNull(Processor.Arch.BIT_32, processor);
+        assertTrue(processor.is32Bit());
+
         processor = ArchUtils.getProcessor(X86_64);
         assertNotEqualsArchNotNull(Processor.Arch.BIT_32, processor);
         assertFalse(processor.is32Bit());
@@ -151,6 +157,10 @@ public class ArchUtilsTest extends AbstractLangTest {
         assertFalse(processor.is32Bit());
 
         processor = ArchUtils.getProcessor(IA64);
+        assertNotEqualsArchNotNull(Processor.Arch.BIT_32, processor);
+        assertFalse(processor.is32Bit());
+
+        processor = ArchUtils.getProcessor(RISCV_64);
         assertNotEqualsArchNotNull(Processor.Arch.BIT_32, processor);
         assertFalse(processor.is32Bit());
     }
@@ -169,6 +179,10 @@ public class ArchUtilsTest extends AbstractLangTest {
         assertEqualsArchNotNull(Processor.Arch.BIT_64, processor);
         assertTrue(processor.is64Bit());
 
+        processor = ArchUtils.getProcessor(RISCV_64);
+        assertEqualsArchNotNull(Processor.Arch.BIT_64, processor);
+        assertTrue(processor.is64Bit());
+
         processor = ArchUtils.getProcessor(X86);
         assertNotEqualsArchNotNull(Processor.Arch.BIT_64, processor);
         assertFalse(processor.is64Bit());
@@ -181,11 +195,23 @@ public class ArchUtilsTest extends AbstractLangTest {
         assertNotEqualsArchNotNull(Processor.Arch.BIT_64, processor);
         assertFalse(processor.is64Bit());
 
+        processor = ArchUtils.getProcessor(RISCV_32);
+        assertNotEqualsArchNotNull(Processor.Arch.BIT_64, processor);
+        assertFalse(processor.is64Bit());
+
         processor = ArchUtils.getProcessor(AARCH_64);
         assertEqualsArchNotNull(Processor.Arch.BIT_64, processor);
         assertNotEqualsArchNotNull(Processor.Arch.BIT_32, processor);
         assertTrue(processor.is64Bit());
         assertFalse(processor.is32Bit());
 }
+
+    @Test
+    public void testTypeLabels() {
+        for (final Type type : Type.values()) {
+            // Only test label presence.
+            assertFalse(type.getLabel().isEmpty());
+        }
+    }
 
 }

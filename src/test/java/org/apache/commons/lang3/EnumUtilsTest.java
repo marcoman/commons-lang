@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -61,9 +62,9 @@ public class EnumUtilsTest extends AbstractLangTest {
             EnumUtils.generateBitVector(Traffic.class, EnumSet.of(Traffic.RED, Traffic.AMBER, Traffic.GREEN)));
 
         // 64 values Enum (to test whether no int<->long jdk conversion issue exists)
-        assertEquals((1L << 31), EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A31)));
-        assertEquals((1L << 32), EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A32)));
-        assertEquals((1L << 63), EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A63)));
+        assertEquals(1L << 31, EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A31)));
+        assertEquals(1L << 32, EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A32)));
+        assertEquals(1L << 63, EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A63)));
         assertEquals(Long.MIN_VALUE, EnumUtils.generateBitVector(Enum64.class, EnumSet.of(Enum64.A63)));
     }
 
@@ -144,9 +145,9 @@ public class EnumUtilsTest extends AbstractLangTest {
             EnumUtils.generateBitVector(Traffic.class, Traffic.RED, Traffic.AMBER, Traffic.GREEN, Traffic.GREEN));
 
         // 64 values Enum (to test whether no int<->long jdk conversion issue exists)
-        assertEquals((1L << 31), EnumUtils.generateBitVector(Enum64.class, Enum64.A31));
-        assertEquals((1L << 32), EnumUtils.generateBitVector(Enum64.class, Enum64.A32));
-        assertEquals((1L << 63), EnumUtils.generateBitVector(Enum64.class, Enum64.A63));
+        assertEquals(1L << 31, EnumUtils.generateBitVector(Enum64.class, Enum64.A31));
+        assertEquals(1L << 32, EnumUtils.generateBitVector(Enum64.class, Enum64.A32));
+        assertEquals(1L << 63, EnumUtils.generateBitVector(Enum64.class, Enum64.A63));
         assertEquals(Long.MIN_VALUE, EnumUtils.generateBitVector(Enum64.class, Enum64.A63));
     }
 
@@ -163,15 +164,15 @@ public class EnumUtilsTest extends AbstractLangTest {
             EnumUtils.generateBitVectors(Traffic.class, EnumSet.of(Traffic.RED, Traffic.AMBER, Traffic.GREEN)), 7L);
 
         // 64 values Enum (to test whether no int<->long jdk conversion issue exists)
-        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A31)), (1L << 31));
-        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A32)), (1L << 32));
-        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A63)), (1L << 63));
+        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A31)), 1L << 31);
+        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A32)), 1L << 32);
+        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A63)), 1L << 63);
         assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, EnumSet.of(Enum64.A63)), Long.MIN_VALUE);
 
         // More than 64 values Enum
         assertArrayEquals(EnumUtils.generateBitVectors(TooMany.class, EnumSet.of(TooMany.M2)), 1L, 0L);
         assertArrayEquals(EnumUtils.generateBitVectors(TooMany.class, EnumSet.of(TooMany.L2, TooMany.M2)), 1L,
-            (1L << 63));
+            1L << 63);
     }
 
     @SuppressWarnings("unchecked")
@@ -239,14 +240,14 @@ public class EnumUtilsTest extends AbstractLangTest {
             EnumUtils.generateBitVectors(Traffic.class, Traffic.RED, Traffic.AMBER, Traffic.GREEN, Traffic.GREEN), 7L);
 
         // 64 values Enum (to test whether no int<->long jdk conversion issue exists)
-        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A31), (1L << 31));
-        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A32), (1L << 32));
-        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A63), (1L << 63));
+        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A31), 1L << 31);
+        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A32), 1L << 32);
+        assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A63), 1L << 63);
         assertArrayEquals(EnumUtils.generateBitVectors(Enum64.class, Enum64.A63), Long.MIN_VALUE);
 
         // More than 64 values Enum
         assertArrayEquals(EnumUtils.generateBitVectors(TooMany.class, TooMany.M2), 1L, 0L);
-        assertArrayEquals(EnumUtils.generateBitVectors(TooMany.class, TooMany.L2, TooMany.M2), 1L, (1L << 63));
+        assertArrayEquals(EnumUtils.generateBitVectors(TooMany.class, TooMany.L2, TooMany.M2), 1L, 1L << 63);
 
     }
 
@@ -340,7 +341,11 @@ public class EnumUtilsTest extends AbstractLangTest {
     @Test
     public void test_getEnumMap() {
         final Map<String, Traffic> test = EnumUtils.getEnumMap(Traffic.class);
-        assertEquals("{RED=RED, AMBER=AMBER, GREEN=GREEN}", test.toString(), "getEnumMap not created correctly");
+        final Map<String, Traffic> expected = new HashMap<>();
+        expected.put("RED", Traffic.RED);
+        expected.put("AMBER", Traffic.AMBER);
+        expected.put("GREEN", Traffic.GREEN);
+        assertEquals(expected, test, "getEnumMap not created correctly");
         assertEquals(3, test.size());
         assertTrue(test.containsKey("RED"));
         assertEquals(Traffic.RED, test.get("RED"));
@@ -354,8 +359,20 @@ public class EnumUtilsTest extends AbstractLangTest {
     @Test
     public void test_getEnumMap_keyFunction() {
         final Map<Integer, Month> test = EnumUtils.getEnumMap(Month.class, Month::getId);
-        assertEquals("{1=JAN, 2=FEB, 3=MAR, 4=APR, 5=MAY, 6=JUN, 7=JUL, 8=AUG, 9=SEP, 10=OCT, 11=NOV, 12=DEC}", test.toString(),
-                "getEnumMap not created correctly");
+        final Map<Integer, Month> expected = new HashMap<>();
+        expected.put(1, Month.JAN);
+        expected.put(2, Month.FEB);
+        expected.put(3, Month.MAR);
+        expected.put(4, Month.APR);
+        expected.put(5, Month.MAY);
+        expected.put(6, Month.JUN);
+        expected.put(7, Month.JUL);
+        expected.put(8, Month.AUG);
+        expected.put(9, Month.SEP);
+        expected.put(10, Month.OCT);
+        expected.put(11, Month.NOV);
+        expected.put(12, Month.DEC);
+        assertEquals(expected, test, "getEnumMap not created correctly");
         assertEquals(12, test.size());
         assertFalse(test.containsKey(0));
         assertTrue(test.containsKey(1));
@@ -456,9 +473,9 @@ public class EnumUtilsTest extends AbstractLangTest {
             EnumUtils.processBitVector(Traffic.class, 7L));
 
         // 64 values Enum (to test whether no int<->long jdk conversion issue exists)
-        assertEquals(EnumSet.of(Enum64.A31), EnumUtils.processBitVector(Enum64.class, (1L << 31)));
-        assertEquals(EnumSet.of(Enum64.A32), EnumUtils.processBitVector(Enum64.class, (1L << 32)));
-        assertEquals(EnumSet.of(Enum64.A63), EnumUtils.processBitVector(Enum64.class, (1L << 63)));
+        assertEquals(EnumSet.of(Enum64.A31), EnumUtils.processBitVector(Enum64.class, 1L << 31));
+        assertEquals(EnumSet.of(Enum64.A32), EnumUtils.processBitVector(Enum64.class, 1L << 32));
+        assertEquals(EnumSet.of(Enum64.A63), EnumUtils.processBitVector(Enum64.class, 1L << 63));
         assertEquals(EnumSet.of(Enum64.A63), EnumUtils.processBitVector(Enum64.class, Long.MIN_VALUE));
     }
 
@@ -507,9 +524,9 @@ public class EnumUtilsTest extends AbstractLangTest {
             EnumUtils.processBitVectors(Traffic.class, 666L, 7L));
 
         // 64 values Enum (to test whether no int<->long jdk conversion issue exists)
-        assertEquals(EnumSet.of(Enum64.A31), EnumUtils.processBitVectors(Enum64.class, (1L << 31)));
-        assertEquals(EnumSet.of(Enum64.A32), EnumUtils.processBitVectors(Enum64.class, (1L << 32)));
-        assertEquals(EnumSet.of(Enum64.A63), EnumUtils.processBitVectors(Enum64.class, (1L << 63)));
+        assertEquals(EnumSet.of(Enum64.A31), EnumUtils.processBitVectors(Enum64.class, 1L << 31));
+        assertEquals(EnumSet.of(Enum64.A32), EnumUtils.processBitVectors(Enum64.class, 1L << 32));
+        assertEquals(EnumSet.of(Enum64.A63), EnumUtils.processBitVectors(Enum64.class, 1L << 63));
         assertEquals(EnumSet.of(Enum64.A63), EnumUtils.processBitVectors(Enum64.class, Long.MIN_VALUE));
     }
 
