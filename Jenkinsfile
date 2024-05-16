@@ -26,6 +26,17 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                echo 'checkout'
+                step([$class: 'WsCleanup'])
+                git branch: 'develocity-1',
+                    credentialsId: 'github',
+                    changelog: true,
+                    url: 'git@github.com:marcoman/commons-lang.git'
+            }
+        }
+
         stage('Build') {
             steps {
                 sh 'mvn'
