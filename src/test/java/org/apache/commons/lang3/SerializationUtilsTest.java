@@ -51,7 +51,7 @@ final class ClassNotFoundSerialization implements Serializable {
 }
 
 /**
- * Unit tests {@link org.apache.commons.lang3.SerializationUtils}.
+ * Unit tests {@link SerializationUtils}.
  */
 public class SerializationUtilsTest extends AbstractLangTest {
 
@@ -242,7 +242,7 @@ public class SerializationUtilsTest extends AbstractLangTest {
     }
 
     @Test
-    public void testNegativeByteArray() throws IOException {
+    public void testNegativeByteArray() {
         final byte[] byteArray = {
             (byte) -84, (byte) -19, (byte) 0, (byte) 5, (byte) 125, (byte) -19, (byte) 0,
             (byte) 5, (byte) 115, (byte) 114, (byte) -1, (byte) 97, (byte) 122, (byte) -48, (byte) -65

@@ -36,11 +36,14 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
+import org.apache.commons.lang3.function.Suppliers;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.lang3.ArrayUtils}.
+ * Unit tests {@link ArrayUtils}.
  */
 @SuppressWarnings("deprecation") // deliberate use of deprecated code
 public class ArrayUtilsTest extends AbstractLangTest {
@@ -67,6 +70,22 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertFalse(ArrayUtils.isEquals(array3, array1));
         assertFalse(ArrayUtils.isEquals(array1, array2));
         assertFalse(ArrayUtils.isEquals(array2, array1));
+    }
+
+    @Test
+    public void testArraycopyFunction() {
+        String[] arr = { "a", "b" };
+        assertThrows(NullPointerException.class, () -> ArrayUtils.arraycopy(null, 0, 0, 1, i -> new String[3]));
+        assertThrows(NullPointerException.class, () -> ArrayUtils.arraycopy(arr, 0, 0, 1, i -> null));
+        assertThrows(NullPointerException.class, () -> ArrayUtils.arraycopy(arr, 0, 0, 1, (Function<Integer, String[]>) null));
+    }
+
+    @Test
+    public void testArraycopySupplier() {
+        String[] arr = { "a", "b" };
+        assertThrows(NullPointerException.class, () -> ArrayUtils.arraycopy(null, 0, 0, 1, () -> new String[3]));
+        assertThrows(NullPointerException.class, () -> ArrayUtils.arraycopy(arr, 0, 0, 1, Suppliers.nul()));
+        assertThrows(NullPointerException.class, () -> ArrayUtils.arraycopy(arr, 0, 0, 1, (Supplier<String[]>) null));
     }
 
     /**
@@ -234,14 +253,14 @@ public class ArrayUtilsTest extends AbstractLangTest {
     @Test
     public void testContainsAny() {
         final Object[] array = {"0", "1", "2", "3", null, "0"};
-        assertFalse(ArrayUtils.containsAny(null, null));
+        assertFalse(ArrayUtils.containsAny(null, (Object) null));
         assertFalse(ArrayUtils.containsAny(null, "1"));
         assertTrue(ArrayUtils.containsAny(array, "0"));
         assertTrue(ArrayUtils.containsAny(array, "1"));
         assertTrue(ArrayUtils.containsAny(array, "2"));
         assertTrue(ArrayUtils.containsAny(array, "3"));
         assertFalse(ArrayUtils.containsAny(array, "notInArray"));
-        assertTrue(ArrayUtils.containsAny(array, new String[] {null}));
+        assertTrue(ArrayUtils.containsAny(array, (Object[]) new String[] { null }));
     }
 
     @Test
@@ -280,7 +299,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertFalse(ArrayUtils.contains(array, 'e'));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testContainsDouble() {
         double[] array = null;
@@ -301,7 +319,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertTrue(ArrayUtils.contains(a, Double.NaN));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testContainsDoubleTolerance() {
         double[] array = null;
@@ -313,7 +330,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertTrue(ArrayUtils.contains(array, 2.5, 0.51));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testContainsFloat() {
         float[] array = null;
@@ -704,7 +720,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(emptySet, ArrayUtils.indexesOf(array, 99));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexesOfDoubleTolerance() {
         double[] array = null;
@@ -749,7 +764,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(emptySet, ArrayUtils.indexesOf(array, 99, 0));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexesOfDoubleWithStartIndexTolerance() {
         double[] array = null;
@@ -1066,7 +1080,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(-1, ArrayUtils.indexOf(array, 'a', 6));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexOfDouble() {
         double[] array = null;
@@ -1091,7 +1104,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexOfDoubleTolerance() {
         double[] array = null;
@@ -1105,7 +1117,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(1, ArrayUtils.indexOf(array, 1.00001324, 0.0001));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexOfDoubleWithStartIndex() {
         double[] array = null;
@@ -1121,7 +1132,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(-1, ArrayUtils.indexOf(array, 0, 6));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexOfDoubleWithStartIndexTolerance() {
         double[] array = null;
@@ -1139,7 +1149,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(1, ArrayUtils.indexOf(array, 1.00001324, -300, 0.0001));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexOfFloat() {
         float[] array = null;
@@ -1162,7 +1171,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(2, ArrayUtils.indexOf(array, Float.POSITIVE_INFINITY));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testIndexOfFloatWithStartIndex() {
         float[] array = null;
@@ -1758,7 +1766,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(4, ArrayUtils.lastIndexOf(array, 'a', 88));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testLastIndexOfDouble() {
         double[] array = null;
@@ -1773,7 +1780,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(-1, ArrayUtils.lastIndexOf(array, 99));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testLastIndexOfDoubleTolerance() {
         double[] array = null;
@@ -1787,7 +1793,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(1, ArrayUtils.lastIndexOf(array, 1.00001324, 0.0001));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testLastIndexOfDoubleWithStartIndex() {
         double[] array = null;
@@ -1804,7 +1809,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(4, ArrayUtils.lastIndexOf(array, 0, 88));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testLastIndexOfDoubleWithStartIndexTolerance() {
         double[] array = null;
@@ -1822,7 +1826,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(-1, ArrayUtils.lastIndexOf(array, 4.15, -200, 2.0));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testLastIndexOfFloat() {
         float[] array = null;
@@ -1837,7 +1840,6 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals(-1, ArrayUtils.lastIndexOf(array, 99));
     }
 
-    @SuppressWarnings("cast")
     @Test
     public void testLastIndexOfFloatWithStartIndex() {
         float[] array = null;
@@ -5501,37 +5503,31 @@ public class ArrayUtilsTest extends AbstractLangTest {
     @Test
     public void testSubarrChar() {
         final char[] nullArray = null;
-        final char[] array = {'a', 'b', 'c', 'd', 'e', 'f'};
-        final char[] leftSubarray = {'a', 'b', 'c', 'd'};
-        final char[] midSubarray = {'b', 'c', 'd', 'e'};
-        final char[] rightSubarray = {'c', 'd', 'e', 'f'};
+        final char[] array = { 'a', 'b', 'c', 'd', 'e', 'f' };
+        final char[] leftSubarray = { 'a', 'b', 'c', 'd' };
+        final char[] midSubarray = { 'b', 'c', 'd', 'e' };
+        final char[] rightSubarray = { 'c', 'd', 'e', 'f' };
 
         assertTrue(ArrayUtils.isEquals(leftSubarray, ArrayUtils.subarray(array, 0, 4)), "0 start, mid end");
         assertTrue(ArrayUtils.isEquals(array, ArrayUtils.subarray(array, 0, array.length)), "0 start, length end");
         assertTrue(ArrayUtils.isEquals(midSubarray, ArrayUtils.subarray(array, 1, 5)), "mid start, mid end");
-        assertTrue(ArrayUtils.isEquals(rightSubarray, ArrayUtils.subarray(array, 2, array.length)),
-                "mid start, length end");
+        assertTrue(ArrayUtils.isEquals(rightSubarray, ArrayUtils.subarray(array, 2, array.length)), "mid start, length end");
 
         assertNull(ArrayUtils.subarray(nullArray, 0, 3), "null input");
-        assertEquals(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(ArrayUtils.EMPTY_CHAR_ARRAY, 1, 2),
-                "empty array");
+        assertEquals(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(ArrayUtils.EMPTY_CHAR_ARRAY, 1, 2), "empty array");
         assertEquals(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 4, 2), "start > end");
         assertEquals(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 3, 3), "start == end");
-        assertTrue(ArrayUtils.isEquals(leftSubarray, ArrayUtils.subarray(array, -2, 4)),
-                "start undershoot, normal end");
+        assertTrue(ArrayUtils.isEquals(leftSubarray, ArrayUtils.subarray(array, -2, 4)), "start undershoot, normal end");
         assertEquals(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 33, 4), "start overshoot, any end");
-        assertTrue(ArrayUtils.isEquals(rightSubarray, ArrayUtils.subarray(array, 2, 33)),
-                "normal start, end overshoot");
+        assertTrue(ArrayUtils.isEquals(rightSubarray, ArrayUtils.subarray(array, 2, 33)), "normal start, end overshoot");
         assertTrue(ArrayUtils.isEquals(array, ArrayUtils.subarray(array, -2, 12)), "start undershoot, end overshoot");
 
         // empty-return tests
 
-        assertSame(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(ArrayUtils.EMPTY_CHAR_ARRAY, 1, 2),
-                "empty array, object test");
+        assertSame(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(ArrayUtils.EMPTY_CHAR_ARRAY, 1, 2), "empty array, object test");
         assertSame(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 4, 1), "start > end, object test");
         assertSame(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 3, 3), "start == end, object test");
-        assertSame(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 8733, 4),
-                "start overshoot, any end, object test");
+        assertSame(ArrayUtils.EMPTY_CHAR_ARRAY, ArrayUtils.subarray(array, 8733, 4), "start overshoot, any end, object test");
 
         // array type tests
 
@@ -5540,7 +5536,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapBoolean() {
-        final boolean[] array = {true, false, false};
+        final boolean[] array = { true, false, false };
         ArrayUtils.swap(array, 0, 2);
         assertFalse(array[0]);
         assertFalse(array[1]);
@@ -5549,38 +5545,38 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapBooleanRange() {
-        boolean[] array = {false, false, true, true};
+        boolean[] array = { false, false, true, true };
         ArrayUtils.swap(array, 0, 2, 2);
         assertTrue(array[0]);
         assertTrue(array[1]);
         assertFalse(array[2]);
         assertFalse(array[3]);
 
-        array = new boolean[]{false, true, false};
+        array = new boolean[] { false, true, false };
         ArrayUtils.swap(array, 0, 3);
         assertFalse(array[0]);
         assertTrue(array[1]);
         assertFalse(array[2]);
 
-        array = new boolean[]{true, true, false};
+        array = new boolean[] { true, true, false };
         ArrayUtils.swap(array, 0, 2, 2);
         assertFalse(array[0]);
         assertTrue(array[1]);
         assertTrue(array[2]);
 
-        array = new boolean[]{true, true, false};
+        array = new boolean[] { true, true, false };
         ArrayUtils.swap(array, -1, 2, 2);
         assertFalse(array[0]);
         assertTrue(array[1]);
         assertTrue(array[2]);
 
-        array = new boolean[]{true, true, false};
+        array = new boolean[] { true, true, false };
         ArrayUtils.swap(array, 0, -1, 2);
         assertTrue(array[0]);
         assertTrue(array[1]);
         assertFalse(array[2]);
 
-        array = new boolean[]{true, true, false};
+        array = new boolean[] { true, true, false };
         ArrayUtils.swap(array, -1, -1, 2);
         assertTrue(array[0]);
         assertTrue(array[1]);
@@ -5589,7 +5585,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapByte() {
-        final byte[] array = {1, 2, 3};
+        final byte[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
@@ -5598,38 +5594,38 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapByteRange() {
-        byte[] array = {1, 2, 3, 4};
+        byte[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new byte[]{1, 2, 3};
+        array = new byte[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 3);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new byte[]{1, 2, 3};
+        array = new byte[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new byte[]{1, 2, 3};
+        array = new byte[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new byte[]{1, 2, 3};
+        array = new byte[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new byte[]{1, 2, 3};
+        array = new byte[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -5638,53 +5634,53 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapChar() {
-        char[] array = {1, 2, 3};
+        char[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
-        assertArrayEquals(new char[]{3, 2, 1}, array);
+        assertArrayEquals(new char[] { 3, 2, 1 }, array);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 0);
-        assertArrayEquals(new char[]{1, 2, 3}, array);
+        assertArrayEquals(new char[] { 1, 2, 3 }, array);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, 1, 0);
-        assertArrayEquals(new char[]{2, 1, 3}, array);
+        assertArrayEquals(new char[] { 2, 1, 3 }, array);
     }
 
     @Test
     public void testSwapCharRange() {
-        char[] array = {1, 2, 3, 4};
+        char[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 3);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new char[]{1, 2, 3};
+        array = new char[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -5693,7 +5689,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapDouble() {
-        final double[] array = {1, 2, 3};
+        final double[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
@@ -5702,38 +5698,38 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapDoubleRange() {
-        double[] array = {1, 2, 3, 4};
+        double[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new double[]{1, 2, 3};
+        array = new double[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 3);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new double[]{1, 2, 3};
+        array = new double[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new double[]{1, 2, 3};
+        array = new double[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new double[]{1, 2, 3};
+        array = new double[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new double[]{1, 2, 3};
+        array = new double[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -5805,7 +5801,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapFloat() {
-        final float[] array = {1, 2, 3};
+        final float[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
@@ -5814,38 +5810,38 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapFloatRange() {
-        float[] array = {1, 2, 3, 4};
+        float[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new float[]{1, 2, 3};
+        array = new float[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 3);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new float[]{1, 2, 3};
+        array = new float[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new float[]{1, 2, 3};
+        array = new float[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new float[]{1, 2, 3};
+        array = new float[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new float[]{1, 2, 3};
+        array = new float[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -5854,7 +5850,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapInt() {
-        final int[] array = {1, 2, 3};
+        final int[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
@@ -5864,49 +5860,49 @@ public class ArrayUtilsTest extends AbstractLangTest {
     @Test
     public void testSwapIntExchangedOffsets() {
         int[] array;
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 1, 2);
-        assertArrayEquals(new int[]{2, 3, 1}, array);
+        assertArrayEquals(new int[] { 2, 3, 1 }, array);
 
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, 1, 0, 2);
-        assertArrayEquals(new int[]{2, 3, 1}, array);
+        assertArrayEquals(new int[] { 2, 3, 1 }, array);
     }
 
     @Test
     public void testSwapIntRange() {
-        int[] array = {1, 2, 3, 4};
+        int[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, 3, 0);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new int[]{1, 2, 3};
+        array = new int[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -5915,7 +5911,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapLong() {
-        final long[] array = {1, 2, 3};
+        final long[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
@@ -5924,38 +5920,38 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapLongRange() {
-        long[] array = {1, 2, 3, 4};
+        long[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new long[]{1, 2, 3};
+        array = new long[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 3);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new long[]{1, 2, 3};
+        array = new long[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new long[]{1, 2, 3};
+        array = new long[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new long[]{1, 2, 3};
+        array = new long[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new long[]{1, 2, 3};
+        array = new long[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -6027,7 +6023,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapObject() {
-        final String[] array = {"1", "2", "3"};
+        final String[] array = { "1", "2", "3" };
         ArrayUtils.swap(array, 0, 2);
         assertEquals("3", array[0]);
         assertEquals("2", array[1]);
@@ -6036,21 +6032,21 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapObjectRange() {
-        String[] array = {"1", "2", "3", "4"};
+        String[] array = { "1", "2", "3", "4" };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals("3", array[0]);
         assertEquals("4", array[1]);
         assertEquals("1", array[2]);
         assertEquals("2", array[3]);
 
-        array = new String[]{"1", "2", "3", "4"};
+        array = new String[] { "1", "2", "3", "4" };
         ArrayUtils.swap(array, -1, 2, 3);
         assertEquals("3", array[0]);
         assertEquals("4", array[1]);
         assertEquals("1", array[2]);
         assertEquals("2", array[3]);
 
-        array = new String[]{"1", "2", "3", "4", "5"};
+        array = new String[] { "1", "2", "3", "4", "5" };
         ArrayUtils.swap(array, -3, 2, 3);
         assertEquals("3", array[0]);
         assertEquals("4", array[1]);
@@ -6058,7 +6054,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
         assertEquals("2", array[3]);
         assertEquals("1", array[4]);
 
-        array = new String[]{"1", "2", "3", "4", "5"};
+        array = new String[] { "1", "2", "3", "4", "5" };
         ArrayUtils.swap(array, 2, -2, 3);
         assertEquals("3", array[0]);
         assertEquals("4", array[1]);
@@ -6077,7 +6073,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapShort() {
-        final short[] array = {1, 2, 3};
+        final short[] array = { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
@@ -6086,38 +6082,38 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testSwapShortRange() {
-        short[] array = {1, 2, 3, 4};
+        short[] array = { 1, 2, 3, 4 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(4, array[1]);
         assertEquals(1, array[2]);
         assertEquals(2, array[3]);
 
-        array = new short[]{1, 2, 3};
+        array = new short[] { 1, 2, 3 };
         ArrayUtils.swap(array, 3, 0);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new short[]{1, 2, 3};
+        array = new short[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new short[]{1, 2, 3};
+        array = new short[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, 2, 2);
         assertEquals(3, array[0]);
         assertEquals(2, array[1]);
         assertEquals(1, array[2]);
 
-        array = new short[]{1, 2, 3};
+        array = new short[] { 1, 2, 3 };
         ArrayUtils.swap(array, 0, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
         assertEquals(3, array[2]);
 
-        array = new short[]{1, 2, 3};
+        array = new short[] { 1, 2, 3 };
         ArrayUtils.swap(array, -1, -1, 2);
         assertEquals(1, array[0]);
         assertEquals(2, array[1]);
@@ -6130,7 +6126,7 @@ public class ArrayUtilsTest extends AbstractLangTest {
         final BitSet emptySet = new BitSet();
         final BitSet testSet = new BitSet();
         assertEquals(emptySet, ArrayUtils.indexesOf(array, 0));
-        array = new int[]{0, 1, 2, 3, 0};
+        array = new int[] { 0, 1, 2, 3, 0 };
         testSet.set(0);
         testSet.set(4);
         assertEquals(testSet, ArrayUtils.indexesOf(array, 0));
@@ -6148,20 +6144,17 @@ public class ArrayUtilsTest extends AbstractLangTest {
 
     @Test
     public void testToMap() {
-        Map<?, ?> map = ArrayUtils.toMap(new String[][]{{"foo", "bar"}, {"hello", "world"}});
+        Map<?, ?> map = ArrayUtils.toMap(new String[][] { { "foo", "bar" }, { "hello", "world" } });
 
         assertEquals("bar", map.get("foo"));
         assertEquals("world", map.get("hello"));
 
         assertNull(ArrayUtils.toMap(null));
-        assertThrows(IllegalArgumentException.class, () ->
-                ArrayUtils.toMap(new String[][]{{"foo", "bar"}, {"short"}}));
-        assertThrows(IllegalArgumentException.class, () ->
-                ArrayUtils.toMap(new Object[]{new Object[]{"foo", "bar"}, "illegal type"}));
-        assertThrows(IllegalArgumentException.class, () ->
-                ArrayUtils.toMap(new Object[]{new Object[]{"foo", "bar"}, null}));
+        assertThrows(IllegalArgumentException.class, () -> ArrayUtils.toMap(new String[][] { { "foo", "bar" }, { "short" } }));
+        assertThrows(IllegalArgumentException.class, () -> ArrayUtils.toMap(new Object[] { new Object[] { "foo", "bar" }, "illegal type" }));
+        assertThrows(IllegalArgumentException.class, () -> ArrayUtils.toMap(new Object[] { new Object[] { "foo", "bar" }, null }));
 
-        map = ArrayUtils.toMap(new Object[]{new Map.Entry<Object, Object>() {
+        map = ArrayUtils.toMap(new Object[] { new Map.Entry<Object, Object>() {
             @Override
             public boolean equals(final Object o) {
                 throw new UnsupportedOperationException();
@@ -6186,18 +6179,18 @@ public class ArrayUtilsTest extends AbstractLangTest {
             public Object setValue(final Object value) {
                 throw new UnsupportedOperationException();
             }
-        }});
+        } });
         assertEquals("bar", map.get("foo"));
 
         // Return empty map when got input array with length = 0
         assertEquals(Collections.emptyMap(), ArrayUtils.toMap(new Object[0]));
 
         // Test all null values
-        map = ArrayUtils.toMap(new Object[][] { {null, null}, {null, null} });
+        map = ArrayUtils.toMap(new Object[][] { { null, null }, { null, null } });
         assertEquals(Collections.singletonMap(null, null), map);
 
         // Test duplicate keys
-        map = ArrayUtils.toMap(new Object[][] { {"key", "value2"}, {"key", "value1"} });
+        map = ArrayUtils.toMap(new Object[][] { { "key", "value2" }, { "key", "value1" } });
         assertEquals(Collections.singletonMap("key", "value1"), map);
     }
 

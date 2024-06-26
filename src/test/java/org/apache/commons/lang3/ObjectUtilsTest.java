@@ -54,7 +54,7 @@ import org.apache.commons.lang3.text.StrBuilder;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests {@link org.apache.commons.lang3.ObjectUtils}.
+ * Unit tests {@link ObjectUtils}.
  */
 @SuppressWarnings("deprecation") // deliberate use of deprecated code
 public class ObjectUtilsTest extends AbstractLangTest {
@@ -286,6 +286,8 @@ public class ObjectUtilsTest extends AbstractLangTest {
     public void testCloneOfUncloneable() {
         final UncloneableString string = new UncloneableString("apache");
         final CloneFailedException e = assertThrows(CloneFailedException.class, () -> ObjectUtils.clone(string));
+        assertNotNull(e);
+        assertNotNull(e.getCause());
         assertEquals(NoSuchMethodException.class, e.getCause().getClass());
     }
 
@@ -480,6 +482,7 @@ public class ObjectUtilsTest extends AbstractLangTest {
     @Test
     public void testGetFirstNonNull() {
         // first non-null
+        assertEquals("", ObjectUtils.getFirstNonNull(null, () -> ""));
         assertEquals("", ObjectUtils.getFirstNonNull(Suppliers.nul(), () -> ""));
         // first encountered value is used
         assertEquals("1", ObjectUtils.getFirstNonNull(Suppliers.nul(), () -> "1", () -> "2", Suppliers.nul()));
@@ -818,8 +821,9 @@ public class ObjectUtilsTest extends AbstractLangTest {
     @Test
     public void testPossibleCloneOfUncloneable() {
         final UncloneableString string = new UncloneableString("apache");
-        final CloneFailedException e = assertThrows(CloneFailedException.class,
-                () -> ObjectUtils.cloneIfPossible(string));
+        final CloneFailedException e = assertThrows(CloneFailedException.class, () -> ObjectUtils.cloneIfPossible(string));
+        assertNotNull(e);
+        assertNotNull(e.getCause());
         assertEquals(NoSuchMethodException.class, e.getCause().getClass());
     }
 

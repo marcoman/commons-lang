@@ -56,15 +56,37 @@ import org.apache.commons.lang3.reflect.testbed.StringParameterizedChild;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Test fixture for https://issues.apache.org/jira/browse/LANG-1524
+ *
+ * @param <T> Test fixture type, unused type parameter for test.
+ */
+class AAAAClass<T extends AAAAClass.BBBBClass.CCCClass> {
+    public static class BBBBClass {
+        public static class CCCClass {
+            // empty
+        }
+    }
+}
+
 final class AAAClass extends AAClass<String> {
     public class BBBClass extends BBClass<String> {
         // empty
     }
 }
 
-@SuppressWarnings("unused") // Unused type parameter for test
+/**
+ * Test fixture.
+ *
+ * @param <T> Test fixture type, unused type parameter for test.
+ */
 class AAClass<T> {
 
+    /**
+     * Test fixture.
+     *
+     * @param <S> Test fixture type, unused type parameter for test.
+     */
     public class BBClass<S> {
         // empty
     }
@@ -146,13 +168,16 @@ abstract class Test1<G> {
 }
 
 /**
- * Test TypeUtils
+ * Tests {@link TypeUtils}.
+ *
+ * @param <B> Type for test fixtures.
  */
-@SuppressWarnings({ "unchecked", "unused", "rawtypes" })
+@SuppressWarnings({ "unused", "rawtypes" })
 //raw types, where used, are used purposely
 public class TypeUtilsTest<B> extends AbstractLangTest {
 
     public interface And<K, V> extends This<Number, Number> {
+        // empty
     }
 
     public static class ClassWithSuperClassWithGenericType extends ArrayList<Object> {
@@ -165,24 +190,31 @@ public class TypeUtilsTest<B> extends AbstractLangTest {
 
     /** This non-static inner class is parameterized. */
     private class MyInnerClass<T> {
+        // empty
     }
 
     public class Other<T> implements This<String, T> {
+        // empty
     }
 
     public class Tester implements This<String, B> {
+        // empty
     }
 
     public class That<K, V> implements This<K, V> {
+        // empty
     }
 
     public class The<K, V> extends That<Number, Number> implements And<String, String> {
+        // empty
     }
 
     public class Thing<Q> extends Other<B> {
+        // empty
     }
 
     public interface This<K, V> {
+        // empty
     }
 
     public static Comparable<String> stringComparable;
@@ -259,6 +291,13 @@ public class TypeUtilsTest<B> extends AbstractLangTest {
     public void test_LANG_1348() throws NoSuchMethodException {
         final Method method = Enum.class.getMethod("valueOf", Class.class, String.class);
         assertEquals("T extends java.lang.Enum<T>", TypeUtils.toString(method.getGenericReturnType()));
+    }
+
+    @Test
+    public void test_LANG_1524() {
+        assertEquals("AAAAClass(cycle).BBBBClass.CCCClass", TypeUtils.toString(AAAAClass.BBBBClass.CCCClass.class));
+        assertEquals("AAAAClass(cycle).BBBBClass", TypeUtils.toString(AAAAClass.BBBBClass.class));
+        assertEquals("AAAAClass(cycle)", TypeUtils.toString(AAAAClass.class));
     }
 
     /**

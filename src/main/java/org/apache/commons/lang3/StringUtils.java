@@ -361,7 +361,7 @@ public class StringUtils {
         if (strLen - offset < maxWidth - abbrevMarkerLength) {
             offset = strLen - (maxWidth - abbrevMarkerLength);
         }
-        if (offset <= abbrevMarkerLength+1) {
+        if (offset <= abbrevMarkerLength + 1) {
             return str.substring(0, maxWidth - abbrevMarkerLength) + abbrevMarker;
         }
         if (maxWidth < minAbbrevWidthOffset) {
@@ -403,17 +403,13 @@ public class StringUtils {
      * @since 2.5
      */
     public static String abbreviateMiddle(final String str, final String middle, final int length) {
-        if (isAnyEmpty(str, middle) || length >= str.length() || length < middle.length()+2) {
+        if (isAnyEmpty(str, middle) || length >= str.length() || length < middle.length() + 2) {
             return str;
         }
-
-        final int targetSting = length-middle.length();
-        final int startOffset = targetSting/2+targetSting%2;
-        final int endOffset = str.length()-targetSting/2;
-
-        return str.substring(0, startOffset) +
-            middle +
-            str.substring(endOffset);
+        final int targetSting = length - middle.length();
+        final int startOffset = targetSting / 2 + targetSting % 2;
+        final int endOffset = str.length() - targetSting / 2;
+        return str.substring(0, startOffset) + middle + str.substring(endOffset);
     }
 
     /**
@@ -1410,10 +1406,67 @@ public class StringUtils {
 
     private static void convertRemainingAccentCharacters(final StringBuilder decomposed) {
         for (int i = 0; i < decomposed.length(); i++) {
-            if (decomposed.charAt(i) == '\u0141') {
+            final char charAt = decomposed.charAt(i);
+            switch (charAt) {
+            case '\u0141':
                 decomposed.setCharAt(i, 'L');
-            } else if (decomposed.charAt(i) == '\u0142') {
+                break;
+            case '\u0142':
                 decomposed.setCharAt(i, 'l');
+                break;
+            // D with stroke
+            case '\u0110':
+                // LATIN CAPITAL LETTER D WITH STROKE
+                decomposed.setCharAt(i, 'D');
+                break;
+            case '\u0111':
+                // LATIN SMALL LETTER D WITH STROKE
+                decomposed.setCharAt(i, 'd');
+                break;
+            // I with bar
+            case '\u0197':
+                decomposed.setCharAt(i, 'I');
+                break;
+            case '\u0268':
+                decomposed.setCharAt(i, 'i');
+                break;
+            case '\u1D7B':
+                decomposed.setCharAt(i, 'I');
+                break;
+            case '\u1DA4':
+                decomposed.setCharAt(i, 'i');
+                break;
+            case '\u1DA7':
+                decomposed.setCharAt(i, 'I');
+                break;
+            // U with bar
+            case '\u0244':
+                // LATIN CAPITAL LETTER U BAR
+                decomposed.setCharAt(i, 'U');
+                break;
+            case '\u0289':
+                // LATIN SMALL LETTER U BAR
+                decomposed.setCharAt(i, 'u');
+                break;
+            case '\u1D7E':
+                // LATIN SMALL CAPITAL LETTER U WITH STROKE
+                decomposed.setCharAt(i, 'U');
+                break;
+            case '\u1DB6':
+                // MODIFIER LETTER SMALL U BAR
+                decomposed.setCharAt(i, 'u');
+                break;
+            // T with stroke
+            case '\u0166':
+                // LATIN CAPITAL LETTER T WITH STROKE
+                decomposed.setCharAt(i, 'T');
+                break;
+            case '\u0167':
+                // LATIN SMALL LETTER T WITH STROKE
+                decomposed.setCharAt(i, 't');
+                break;
+            default:
+                break;
             }
         }
     }
@@ -7050,11 +7103,6 @@ public class StringUtils {
      * @since 2.0
      */
     public static String reverseDelimited(final String str, final char separatorChar) {
-        if (str == null) {
-            return null;
-        }
-        // could implement manually, but simple way is to reuse other,
-        // probably slower, methods.
         final String[] strs = split(str, separatorChar);
         ArrayUtils.reverse(strs);
         return join(strs, separatorChar);
@@ -7817,7 +7865,6 @@ public class StringUtils {
      */
     private static String[] splitWorker(final String str, final char separatorChar, final boolean preserveAllTokens) {
         // Performance tuned for 2.0 (JDK1.4)
-
         if (str == null) {
             return null;
         }
@@ -8119,7 +8166,8 @@ public class StringUtils {
     /**
      * Removes diacritics (~= accents) from a string. The case will not be altered.
      * <p>For instance, '&agrave;' will be replaced by 'a'.</p>
-     * <p>Note that ligatures will be left as is.</p>
+     * <p>Decomposes ligatures and digraphs per the KD column in the
+     * <a href = "https://www.unicode.org/charts/normalization/">Unicode Normalization Chart.</a></p>
      *
      * <pre>
      * StringUtils.stripAccents(null)                = null
@@ -8135,12 +8183,11 @@ public class StringUtils {
      */
     // See also Lucene's ASCIIFoldingFilter (Lucene 2.9) that replaces accented characters by their unaccented equivalent (and uncommitted bug fix: https://issues.apache.org/jira/browse/LUCENE-1343?focusedCommentId=12858907&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#action_12858907).
     public static String stripAccents(final String input) {
-        if (input == null) {
-            return null;
+        if (isEmpty(input)) {
+            return input;
         }
-        final StringBuilder decomposed = new StringBuilder(Normalizer.normalize(input, Normalizer.Form.NFD));
+        final StringBuilder decomposed = new StringBuilder(Normalizer.normalize(input, Normalizer.Form.NFKD));
         convertRemainingAccentCharacters(decomposed);
-        // Note that this doesn't correctly remove ligatures...
         return STRIP_ACCENTS_PATTERN.matcher(decomposed).replaceAll(EMPTY);
     }
 
@@ -9393,7 +9440,7 @@ public class StringUtils {
      *            the string to be wrapped, may be {@code null}
      * @param wrapWith
      *            the char that will wrap {@code str}
-     * @return the wrapped string, or {@code null} if {@code str==null}
+     * @return the wrapped string, or {@code null} if {@code str == null}
      * @since 3.4
      */
     public static String wrap(final String str, final char wrapWith) {
@@ -9463,7 +9510,7 @@ public class StringUtils {
      *            the string to be wrapped, may be {@code null}
      * @param wrapWith
      *            the char that will wrap {@code str}
-     * @return the wrapped string, or {@code null} if {@code str==null}
+     * @return the wrapped string, or {@code null} if {@code str == null}
      * @since 3.5
      */
     public static String wrapIfMissing(final String str, final char wrapWith) {
@@ -9513,7 +9560,7 @@ public class StringUtils {
      *            the string to be wrapped, may be {@code null}
      * @param wrapWith
      *            the string that will wrap {@code str}
-     * @return the wrapped string, or {@code null} if {@code str==null}
+     * @return the wrapped string, or {@code null} if {@code str == null}
      * @since 3.5
      */
     public static String wrapIfMissing(final String str, final String wrapWith) {

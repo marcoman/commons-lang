@@ -218,11 +218,11 @@ public class FastDatePrinter implements DatePrinter, Serializable {
             final int hours = offset / (60 * 60 * 1000);
             appendDigits(buffer, hours);
 
-            if (length<5) {
+            if (length < 5) {
                 return;
             }
 
-            if (length==6) {
+            if (length == 6) {
                 buffer.append(':');
             }
 
@@ -386,7 +386,7 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         @Override
         public int estimateLength() {
             int max = 0;
-            for (int i=values.length; --i >= 0; ) {
+            for (int i = values.length; --i >= 0;) {
                 final int len = values[i].length();
                 if (len > max) {
                     max = len;
@@ -477,11 +477,8 @@ public class FastDatePrinter implements DatePrinter, Serializable {
         @Override
         public void appendTo(final Appendable buffer, final Calendar calendar) throws IOException {
             final TimeZone zone = calendar.getTimeZone();
-            if (calendar.get(Calendar.DST_OFFSET) == 0) {
-                buffer.append(getTimeZoneDisplay(zone, false, style, locale));
-            } else {
-                buffer.append(getTimeZoneDisplay(zone, true, style, locale));
-            }
+            final boolean daylight = calendar.get(Calendar.DST_OFFSET) != 0;
+            buffer.append(getTimeZoneDisplay(zone, daylight, style, locale));
         }
 
         /**

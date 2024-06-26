@@ -1110,6 +1110,19 @@ public class SystemUtils {
      */
     public static final boolean IS_JAVA_21 = getJavaVersionMatches("21");
 
+    /**
+     * Is {@code true} if this is Java version 22 (also 22.x versions).
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     * <p>
+     * This value is initialized when the class is loaded.
+     * </p>
+     *
+     * @since 3.15.0
+     */
+    public static final boolean IS_JAVA_22 = getJavaVersionMatches("22");
+
     // Operating system checks
     // -----------------------------------------------------------------------
     // These MUST be declared after those above as they depend on the
@@ -1130,6 +1143,20 @@ public class SystemUtils {
      * @since 2.0
      */
     public static final boolean IS_OS_AIX = getOsMatchesName("AIX");
+
+    /**
+     * Is {@code true} if this is Android.
+     *
+     * <p>
+     * See https://developer.android.com/reference/java/lang/System#getProperties().
+     * </p>
+     * <p>
+     * This value is initialized when the class is loaded.
+     * </p>
+     *
+     * @since 3.15.0
+     */
+    public static final boolean IS_OS_ANDROID = SystemProperties.getJavaVendor().contains("Android");
 
     /**
      * Is {@code true} if this is HP-UX.
@@ -1478,6 +1505,19 @@ public class SystemUtils {
      * @since 3.13.0
      */
     public static final boolean IS_OS_MAC_OSX_VENTURA = getOsMatches("Mac OS X", "13");
+
+    /**
+     * Is {@code true} if this is macOS X Sonoma.
+     *
+     * <p>
+     * The field will return {@code false} if {@code OS_NAME} is {@code null}.
+     * </p>
+     * <p>
+     * This value is initialized when the class is loaded.
+     * </p>
+     * @since 3.15.0
+     */
+    public static final boolean IS_OS_MAC_OSX_SONOMA = getOsMatches("Mac OS X", "14");
 
     /**
      * Is {@code true} if this is FreeBSD.
@@ -1960,7 +2000,7 @@ public class SystemUtils {
      * @return true if matches, or false if not or can't determine
      */
     private static boolean getOsMatches(final String osNamePrefix, final String osVersionPrefix) {
-        return isOSMatch(OS_NAME, OS_VERSION, osNamePrefix, osVersionPrefix);
+        return isOsMatch(OS_NAME, OS_VERSION, osNamePrefix, osVersionPrefix);
     }
 
     /**
@@ -1970,7 +2010,7 @@ public class SystemUtils {
      * @return true if matches, or false if not or can't determine
      */
     private static boolean getOsMatchesName(final String osNamePrefix) {
-        return isOSNameMatch(OS_NAME, osNamePrefix);
+        return isOsNameMatch(OS_NAME, osNamePrefix);
     }
 
     /**
@@ -2023,9 +2063,11 @@ public class SystemUtils {
      * access to the specified system property.
      * @see SystemProperties#getUserName()
      * @since 3.10
+     * @deprecated Use {@link SystemProperties#getUserName(String)}.
      */
+    @Deprecated
     public static String getUserName(final String defaultValue) {
-        return System.getProperty(SystemProperties.USER_NAME, defaultValue);
+        return SystemProperties.getUserName(defaultValue);
     }
 
     /**
@@ -2095,11 +2137,11 @@ public class SystemUtils {
      * @param osVersionPrefix the prefix for the expected OS version
      * @return true if matches, or false if not or can't determine
      */
-    static boolean isOSMatch(final String osName, final String osVersion, final String osNamePrefix, final String osVersionPrefix) {
+    static boolean isOsMatch(final String osName, final String osVersion, final String osNamePrefix, final String osVersionPrefix) {
         if (osName == null || osVersion == null) {
             return false;
         }
-        return isOSNameMatch(osName, osNamePrefix) && isOSVersionMatch(osVersion, osVersionPrefix);
+        return isOsNameMatch(osName, osNamePrefix) && isOsVersionMatch(osVersion, osVersionPrefix);
     }
 
     /**
@@ -2112,7 +2154,7 @@ public class SystemUtils {
      * @param osNamePrefix the prefix for the expected OS name
      * @return true if matches, or false if not or can't determine
      */
-    static boolean isOSNameMatch(final String osName, final String osNamePrefix) {
+    static boolean isOsNameMatch(final String osName, final String osNamePrefix) {
         if (osName == null) {
             return false;
         }
@@ -2129,14 +2171,14 @@ public class SystemUtils {
      * @param osVersionPrefix the prefix for the expected OS version
      * @return true if matches, or false if not or can't determine
      */
-    static boolean isOSVersionMatch(final String osVersion, final String osVersionPrefix) {
+    static boolean isOsVersionMatch(final String osVersion, final String osVersionPrefix) {
         if (StringUtils.isEmpty(osVersion)) {
             return false;
         }
         // Compare parts of the version string instead of using String.startsWith(String) because otherwise
         // osVersionPrefix 10.1 would also match osVersion 10.10
-        final String[] versionPrefixParts = osVersionPrefix.split("\\.");
-        final String[] versionParts = osVersion.split("\\.");
+        final String[] versionPrefixParts = JavaVersion.split(osVersionPrefix);
+        final String[] versionParts = JavaVersion.split(osVersion);
         for (int i = 0; i < Math.min(versionPrefixParts.length, versionParts.length); i++) {
             if (!versionPrefixParts[i].equals(versionParts[i])) {
                 return false;
