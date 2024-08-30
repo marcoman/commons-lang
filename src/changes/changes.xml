@@ -45,7 +45,65 @@ The <action> type attribute can be add,update,fix,remove.
     <title>Apache Commons Lang Release Notes</title>
   </properties>
   <body>
-  <release version="3.15.0" date="202Y-MM-DD" description="New features and bug fixes (Java 8 or above).">
+  <release version="3.17.1" date="YYYY-MM-DD" description="This is a feature and maintenance release. Java 8 or later is required.">
+    <!-- FIX -->
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Fix flaky FileUtilsWaitForTest.testWaitForNegativeDuration().</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Pick up exec-maven-plugin version from parent POM.</action>
+    <!-- ADD -->
+    <!-- UPDATE -->
+    <action                   type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 73 to 74 #1267.</action>
+  </release>
+  <release version="3.17.0" date="2024-08-24" description="This is a feature and maintenance release. Java 8 or later is required.">
+    <!-- FIX -->
+    <action issue="LANG-1760" type="fix" dev="ggregory" due-to="Marco Hoek, Gary Gregory">Using RandomStringUtils.insecure() still leads to using the secure() random.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate static RandomUtils.next*() methods in favor or .secure() and .insecure() versions.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate static RandomStringUtils.random*() methods in favor or .secure() and .insecure() versions.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">RandomUtils.secure() now uses SecureRandom() instead of SecureRandom.getInstanceStrong().</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">RandomStringUtils.secure() now uses SecureRandom() instead of SecureRandom.getInstanceStrong().</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Remove unused exception from deprecated StringUtils.toString(byte[], String).</action>
+    <!-- ADD -->
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Make RandomUtils.insecure() public.</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add RandomUtils.secureStrong().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add RandomStringUtils.secureStrong().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add CalendarUtils.toLocalDateTime(Calendar).</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add CalendarUtils.toLocalDateTime().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add CalendarUtils.toZonedDateTime(Calendar).</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add CalendarUtils.toZonedDateTime().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add CalendarUtils.toOffsetDateTime(Calendar).</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add CalendarUtils.toOffsetDateTime().</action>
+    <!-- UPDATE -->
+    <action                   type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.hamcrest:hamcrest from 2.2 to 3.0 #1255.</action>
+    <action                   type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.easymock:easymock from 5.3.0 to 5.4.0 #1256.</action>
+    <action                   type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.codehaus.mojo:exec-maven-plugin from 3.3.0 to 3.4.1 #1262, #1264.</action>
+    <action                   type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 72 to 73 #1265.</action>
+  </release>
+  <release version="3.16.0" date="2024-08-01" description="This is a feature and maintenance release. Java 8 or later is required.">
+    <!-- FIX -->
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Reimplement StopWatch internals to use java.time.</action>
+    <action issue="LANG-1745" type="fix" dev="ggregory" due-to="Wang Hailong, Gary Gregory">RandomStringUtils.random() with a negative character index should throw IllegalArgumentException.</action>
+    <action issue="LANG-1741" type="fix" dev="ggregory" due-to="Wang Hailong, Gary Gregory">LocaleUtils.toLocale(String) cannot parse four segments.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Use fewer intermediary strings in DefaultExceptionContext.getFormattedExceptionMessage(String).</action>
+    <action                   type="fix" dev="ggregory" due-to="Václav Haisman">Fix Javadoc in StringUtils.splitPreserveAllTokens() #1251.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate ArraySort constructor for removal.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate CharEncoding constructor for removal.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate Conversion constructor for removal.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate Conversion constructor for removal.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate EntityArrays constructor for removal.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate ObjectToStringComparator constructor for removal.</action>
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Deprecate RuntimeEnvironment constructor for removal.</action>
+    <!-- ADD -->
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add StopWatch.getSplitDuration() and deprecate getSplitTime().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add StopWatch.getStartInstant() and deprecate getStartTime().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add StopWatch.getStopInstant() and deprecate getStopTime().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add StopWatch.getDuration() and deprecate getTime().</action>
+    <action                   type="add" dev="ggregory" due-to="Oliver B. Fischer, Gary Gregory">Add Javadoc links from StopWatch to DurationUtils #1249.</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add LangCollectors.collect(Collector, T...).</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add RandomStringUtils.secure().</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add RandomStringUtils.insecure().</action>
+    <!-- UPDATE -->
+    <action                   type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">Bump org.apache.commons:commons-parent from 71 to 72 #1253.</action>
+  </release>
+  <release version="3.15.0" date="2024-07-13" description="New features and bug fixes (Java 8 or above).">
     <!-- ADD -->
     <action issue="LANG-1724" type="add" dev="ggregory" due-to="Gary Gregory, Dennis Baerten">Customize text pattern in DiffResult#toString().</action>
     <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add DiffBuilder.Builder.</action>
@@ -68,6 +126,8 @@ The <action> type attribute can be add,update,fix,remove.
     <action issue="LANG-1733" type="add" dev="ggregory" due-to="Jongjin Bae, Gary Gregory">Add null-safe Consumers.accept() and Functions.apply() #1215.</action>
     <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add SystemUtils.IS_OS_ANDROID.</action>
     <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add SystemUtils.IS_OS_MAC_OSX_SONOMA.</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add RuntimeEnvironment.inContainer() #1241.</action>
+    <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add AppendableJoiner and refactor string joining #1244.</action>
     <!-- FIX -->
     <action                   type="fix" dev="ggregory" due-to="Miklós Karakó, Gary Gregory">Improve Javadoc in ExceptionUtils #1136.</action>
     <action                   type="fix" dev="ggregory" due-to="Saiharshith Karuneegar Ramesh, Gary Gregory">Fixed two non-deterministic tests in EnumUtilsTest.java #1131.</action>
@@ -141,11 +201,14 @@ The <action> type attribute can be add,update,fix,remove.
     <action issue="LANG-1735" type="fix" dev="ggregory" due-to="Tobias Kiecker">Fix Javadoc for FluentBitSet.setInclusive(int, int) #1222.</action>
     <action                   type="fix" dev="ggregory" due-to="Tobias Kiecker">Same Javadoc changes as [TEXT-234] #1223.</action>  
     <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Remove duplicate static data in SerializationUtils.ClassLoaderAwareObjectInputStream.</action> 
+    <action                   type="fix" dev="ggregory" due-to="Gary Gregory, Henri Yandell, Fabrice Benhamouda">Reimplement RandomUtils and RandomStringUtils on top of SecureRandom#getInstanceStrong() #1235.</action>
+    <action issue="LANG-1657" type="fix" dev="ggregory" due-to="Matthias Welz, Andrew Thomas, Gary Gregory">DiffBuilder: Type constraint for method append(..., DiffResult) too strict #786.</action> 
     <!-- UPDATE -->
     <action                   type="update" dev="sebb" due-to="Dependabot, Gary Gregory">Bump commons-parent from 64 to 71 #1194, #1233.</action>
     <action                   type="update" dev="ggregory" due-to="Dependabot">Bump org.codehaus.mojo:exec-maven-plugin from 3.1.1 to 3.3.0 #1175, #1224.</action>
     <action                   type="update" dev="ggregory" due-to="Dependabot">Bump org.apache.commons:commons-text from 1.11.0 to 1.12.0 #1200.</action>
     <action                   type="update" dev="ggregory" due-to="Dependabot">Bump org.easymock:easymock from 5.2.0 to 5.3.0 #1232.</action>
+    <action                   type="update" dev="ggregory" due-to="Dependabot">Bump org.codehaus.mojo:taglist-maven-plugin from 3.0.0 to 3.1.0 #1242.</action> 
     <!-- REMOVE -->
     <action                   type="remove" dev="ggregory" due-to="Paranoïd User">Drop obsolete JDK 13 Maven profile #1142.</action>
   </release>
@@ -271,6 +334,7 @@ The <action> type attribute can be add,update,fix,remove.
     <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Throw IllegalArgumentException instead of InternalError in the builder package.</action>    
     <action                   type="fix" dev="ggregory" due-to="Gary Gregory">Avoid NPE in MutableObject#equals() for null content.</action>
     <action                   type="fix" dev="ggregory" due-to="Ali Khaleqi Yekta, Gary Gregory">SystemUtils fix and updates related to macOS #1085.</action>
+    <action issue="LANG-1254" type="fix" dev="ggregory" due-to="John Mark, Gary Gregory">ThreadLocalRandom should be used in utility classes.</action>
     <!-- ADD -->
     <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add GitHub coverage.yml.</action>
     <action                   type="add" dev="ggregory" due-to="Gary Gregory">Add EnumUtils.getEnumSystemProperty(...).</action>

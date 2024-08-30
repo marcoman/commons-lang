@@ -33,7 +33,7 @@ import org.apache.commons.lang3.ObjectUtils;
  * </p>
  *
  * <pre>{@code
- * public class Person implements Diffable&lt;Person&gt; {
+ * public class Person implements Diffable<Person> {
  *   String name;
  *   int age;
  *   boolean smoker;
@@ -86,6 +86,13 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
         private ToStringStyle style;
         private boolean testObjectsEquals = true;
         private String toStringFormat = TO_STRING_FORMAT;
+
+        /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
 
         /**
          * Builds a new configured {@link DiffBuilder}.
@@ -262,7 +269,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code boolean}s are equal.
+     * Tests if two {@code boolean}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code boolean}
@@ -275,7 +282,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code boolean[]}s are equal.
+     * Tests if two {@code boolean[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code boolean[]}
@@ -288,7 +295,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code byte}s are equal.
+     * Tests if two {@code byte}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code byte}
@@ -301,7 +308,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code byte[]}s are equal.
+     * Tests if two {@code byte[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code byte[]}
@@ -314,7 +321,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code char}s are equal.
+     * Tests if two {@code char}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code char}
@@ -327,7 +334,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code char[]}s are equal.
+     * Tests if two {@code char[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code char[]}
@@ -340,16 +347,16 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Append diffs from another {@link DiffResult}.
+     * Appends diffs from another {@link DiffResult}.
      *
      * <p>
      * Useful this method to compare properties which are themselves Diffable and would like to know which specific part of it is different.
      * </p>
      *
-     * <pre>
-     * public class Person implements Diffable&lt;Person&gt; {
+     * <pre>{@code
+     * public class Person implements Diffable<Person> {
      *   String name;
-     *   Address address; // implements Diffable&lt;Address&gt;
+     *   Address address; // implements Diffable<Address>
      *
      *   ...
      *
@@ -360,6 +367,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
      *       .build();
      *   }
      * }
+     * }
      * </pre>
      *
      * @param fieldName  the field name
@@ -368,7 +376,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
      * @throws NullPointerException if field name is {@code null} or diffResult is {@code null}
      * @since 3.5
      */
-    public DiffBuilder<T> append(final String fieldName, final DiffResult<T> diffResult) {
+    public DiffBuilder<T> append(final String fieldName, final DiffResult<?> diffResult) {
         Objects.requireNonNull(diffResult, "diffResult");
         if (equals) {
             return this;
@@ -378,7 +386,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code double}s are equal.
+     * Tests if two {@code double}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code double}
@@ -392,7 +400,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code double[]}s are equal.
+     * Tests if two {@code double[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code double[]}
@@ -419,7 +427,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code float[]}s are equal.
+     * Tests if two {@code float[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code float[]}
@@ -432,7 +440,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code int}s are equal.
+     * Tests if two {@code int}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code int}
@@ -445,7 +453,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code int[]}s are equal.
+     * Tests if two {@code int[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code int[]}
@@ -458,7 +466,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code long}s are equal.
+     * Tests if two {@code long}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code long}
@@ -471,7 +479,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code long[]}s are equal.
+     * Tests if two {@code long[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code long[]}
@@ -484,7 +492,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@link Objects}s are equal.
+     * Tests if two {@link Objects}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@link Object}
@@ -530,7 +538,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code Object[]}s are equal.
+     * Tests if two {@code Object[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code Object[]}
@@ -543,7 +551,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code short}s are equal.
+     * Tests if two {@code short}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code short}
@@ -556,7 +564,7 @@ public class DiffBuilder<T> implements Builder<DiffResult<T>> {
     }
 
     /**
-     * Test if two {@code short[]}s are equal.
+     * Tests if two {@code short[]}s are equal.
      *
      * @param fieldName the field name
      * @param lhs       the left-hand side {@code short[]}

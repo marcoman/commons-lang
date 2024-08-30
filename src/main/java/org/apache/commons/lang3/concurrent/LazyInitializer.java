@@ -37,12 +37,13 @@ import org.apache.commons.lang3.function.FailableSupplier;
  * this class, a subclass of {@link LazyInitializer} has to be created:
  * </p>
  *
- * <pre>
- * public class ComplexObjectInitializer extends LazyInitializer&lt;ComplexObject&gt; {
+ * <pre>{@code
+ * public class ComplexObjectInitializer extends LazyInitializer<ComplexObject> {
  *     &#064;Override
  *     protected ComplexObject initialize() {
  *         return new ComplexObject();
  *     }
+ * }
  * }
  * </pre>
  *
@@ -78,6 +79,13 @@ public class LazyInitializer<T> extends AbstractConcurrentInitializer<T, Concurr
      * @since 3.14.0
      */
     public static class Builder<I extends LazyInitializer<T>, T> extends AbstractBuilder<I, T, Builder<I, T>, ConcurrentException> {
+
+        /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
 
         @SuppressWarnings("unchecked")
         @Override

@@ -15,35 +15,26 @@
  * limitations under the License.
  */
 
-package org.apache.commons.lang3.builder;
-
-import org.apache.commons.lang3.function.FailableSupplier;
+package org.apache.commons.lang3;
 
 /**
- * Abstracts supplying an instance of {@code T}. Use to implement the builder pattern.
- *
- * @param <T> the type of instances to build.
- * @param <B> the type of builder.
- * @param <E> The kind of thrown exception or error.
- * @since 3.14.0
+ * An object that throws a runtime exception when you call {@link #toString()}.
  */
-public abstract class AbstractSupplier<T, B extends AbstractSupplier<T, B, E>, E extends Throwable> implements FailableSupplier<T, E> {
+public class ObjectToStringRuntimeException {
 
-    /**
-     * Constructs a new instance.
-     */
-    public AbstractSupplier() {
-        // empty
+    private final String message;
+
+    public ObjectToStringRuntimeException(final String message) {
+        this.message = message;
     }
 
     /**
-     * Returns this instance typed as the proper subclass type.
+     * Throws {@link IllegalStateException}.
      *
-     * @return this instance typed as the proper subclass type.
+     * @throws IllegalStateException always thrown.
      */
-    @SuppressWarnings("unchecked")
-    protected B asThis() {
-        return (B) this;
+    @Override
+    public String toString() {
+        throw new IllegalStateException(new NullPointerException(message));
     }
-
 }

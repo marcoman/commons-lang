@@ -190,7 +190,7 @@ public class BooleanUtils {
     }
 
     /**
-     * Checks if a {@link Boolean} value is <i>not</i> {@code false},
+     * Checks if a {@link Boolean} value is <em>not</em> {@code false},
      * handling {@code null} by returning {@code true}.
      *
      * <pre>
@@ -208,7 +208,7 @@ public class BooleanUtils {
     }
 
     /**
-     * Checks if a {@link Boolean} value is <i>not</i> {@code true},
+     * Checks if a {@link Boolean} value is <em>not</em> {@code true},
      * handling {@code null} by returning {@code true}.
      *
      * <pre>
@@ -960,7 +960,7 @@ public class BooleanUtils {
     }
 
     /**
-     * Converts a Boolean to a Integer using the convention that
+     * Converts a Boolean to an Integer using the convention that
      * {@code zero} is {@code false}.
      *
      * <p>{@code null} will be converted to {@code null}.</p>

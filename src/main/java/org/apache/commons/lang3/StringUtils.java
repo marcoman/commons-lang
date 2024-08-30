@@ -801,16 +801,16 @@ public class StringUtils {
      * <p>{@code null} value is considered less than non-{@code null} value.
      * Two {@code null} references are considered equal.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.compare(null, null)   = 0
-     * StringUtils.compare(null , "a")   &lt; 0
-     * StringUtils.compare("a", null)    &gt; 0
+     * StringUtils.compare(null , "a")   < 0
+     * StringUtils.compare("a", null)   > 0
      * StringUtils.compare("abc", "abc") = 0
-     * StringUtils.compare("a", "b")     &lt; 0
-     * StringUtils.compare("b", "a")     &gt; 0
-     * StringUtils.compare("a", "B")     &gt; 0
-     * StringUtils.compare("ab", "abc")  &lt; 0
-     * </pre>
+     * StringUtils.compare("a", "b")     < 0
+     * StringUtils.compare("b", "a")     > 0
+     * StringUtils.compare("a", "B")     > 0
+     * StringUtils.compare("ab", "abc")  < 0
+     * }</pre>
      *
      * @see #compare(String, String, boolean)
      * @see String#compareTo(String)
@@ -837,18 +837,18 @@ public class StringUtils {
      * <p>{@code null} inputs are handled according to the {@code nullIsLess} parameter.
      * Two {@code null} references are considered equal.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.compare(null, null, *)     = 0
-     * StringUtils.compare(null , "a", true)  &lt; 0
-     * StringUtils.compare(null , "a", false) &gt; 0
-     * StringUtils.compare("a", null, true)   &gt; 0
-     * StringUtils.compare("a", null, false)  &lt; 0
+     * StringUtils.compare(null , "a", true)  < 0
+     * StringUtils.compare(null , "a", false) > 0
+     * StringUtils.compare("a", null, true)   > 0
+     * StringUtils.compare("a", null, false)  < 0
      * StringUtils.compare("abc", "abc", *)   = 0
-     * StringUtils.compare("a", "b", *)       &lt; 0
-     * StringUtils.compare("b", "a", *)       &gt; 0
-     * StringUtils.compare("a", "B", *)       &gt; 0
-     * StringUtils.compare("ab", "abc", *)    &lt; 0
-     * </pre>
+     * StringUtils.compare("a", "b", *)       < 0
+     * StringUtils.compare("b", "a", *)       > 0
+     * StringUtils.compare("a", "B", *)       > 0
+     * StringUtils.compare("ab", "abc", *)    < 0
+     * }</pre>
      *
      * @see String#compareTo(String)
      * @param str1  the String to compare from
@@ -886,18 +886,18 @@ public class StringUtils {
      * Two {@code null} references are considered equal.
      * Comparison is case insensitive.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.compareIgnoreCase(null, null)   = 0
-     * StringUtils.compareIgnoreCase(null , "a")   &lt; 0
-     * StringUtils.compareIgnoreCase("a", null)    &gt; 0
+     * StringUtils.compareIgnoreCase(null , "a")   < 0
+     * StringUtils.compareIgnoreCase("a", null)    > 0
      * StringUtils.compareIgnoreCase("abc", "abc") = 0
      * StringUtils.compareIgnoreCase("abc", "ABC") = 0
-     * StringUtils.compareIgnoreCase("a", "b")     &lt; 0
-     * StringUtils.compareIgnoreCase("b", "a")     &gt; 0
-     * StringUtils.compareIgnoreCase("a", "B")     &lt; 0
-     * StringUtils.compareIgnoreCase("A", "b")     &lt; 0
-     * StringUtils.compareIgnoreCase("ab", "ABC")  &lt; 0
-     * </pre>
+     * StringUtils.compareIgnoreCase("a", "b")     < 0
+     * StringUtils.compareIgnoreCase("b", "a")     > 0
+     * StringUtils.compareIgnoreCase("a", "B")     < 0
+     * StringUtils.compareIgnoreCase("A", "b")     < 0
+     * StringUtils.compareIgnoreCase("ab", "ABC")  < 0
+     * }</pre>
      *
      * @see #compareIgnoreCase(String, String, boolean)
      * @see String#compareToIgnoreCase(String)
@@ -927,20 +927,20 @@ public class StringUtils {
      * Two {@code null} references are considered equal.
      * Comparison is case insensitive.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.compareIgnoreCase(null, null, *)     = 0
-     * StringUtils.compareIgnoreCase(null , "a", true)  &lt; 0
-     * StringUtils.compareIgnoreCase(null , "a", false) &gt; 0
-     * StringUtils.compareIgnoreCase("a", null, true)   &gt; 0
-     * StringUtils.compareIgnoreCase("a", null, false)  &lt; 0
+     * StringUtils.compareIgnoreCase(null , "a", true)  < 0
+     * StringUtils.compareIgnoreCase(null , "a", false) > 0
+     * StringUtils.compareIgnoreCase("a", null, true)   > 0
+     * StringUtils.compareIgnoreCase("a", null, false)  < 0
      * StringUtils.compareIgnoreCase("abc", "abc", *)   = 0
      * StringUtils.compareIgnoreCase("abc", "ABC", *)   = 0
-     * StringUtils.compareIgnoreCase("a", "b", *)       &lt; 0
-     * StringUtils.compareIgnoreCase("b", "a", *)       &gt; 0
-     * StringUtils.compareIgnoreCase("a", "B", *)       &lt; 0
-     * StringUtils.compareIgnoreCase("A", "b", *)       &lt; 0
-     * StringUtils.compareIgnoreCase("ab", "abc", *)    &lt; 0
-     * </pre>
+     * StringUtils.compareIgnoreCase("a", "b", *)       < 0
+     * StringUtils.compareIgnoreCase("b", "a", *)       > 0
+     * StringUtils.compareIgnoreCase("a", "B", *)       < 0
+     * StringUtils.compareIgnoreCase("A", "b", *)       < 0
+     * StringUtils.compareIgnoreCase("ab", "abc", *)    < 0
+     * }</pre>
      *
      * @see String#compareToIgnoreCase(String)
      * @param str1  the String to compare from
@@ -1742,7 +1742,7 @@ public class StringUtils {
     }
 
     /**
-     * Check if a CharSequence ends with a specified suffix (optionally case insensitive).
+     * Check if a CharSequence ends with a specified suffix (optionally case-insensitive).
      *
      * @see String#endsWith(String)
      * @param str  the CharSequence to check, may be null
@@ -1797,7 +1797,7 @@ public class StringUtils {
     }
 
     /**
-     * Case insensitive check if a CharSequence ends with a specified suffix.
+     * Case-insensitive check if a CharSequence ends with a specified suffix.
      *
      * <p>{@code null}s are handled without exceptions. Two {@code null}
      * references are considered to be equal. The comparison is case insensitive.</p>
@@ -2684,14 +2684,14 @@ public class StringUtils {
      * {@code seq} {@link CharSequence} object, then the index (in Unicode
      * code units) of the first such occurrence is returned. For
      * values of {@code searchChar} in the range from 0 to 0xFFFF
-     * (inclusive), this is the smallest value <i>k</i> such that:
+     * (inclusive), this is the smallest value <em>k</em> such that:
      * <blockquote><pre>
-     * this.charAt(<i>k</i>) == searchChar
+     * this.charAt(<em>k</em>) == searchChar
      * </pre></blockquote>
      * is true. For other values of {@code searchChar}, it is the
-     * smallest value <i>k</i> such that:
+     * smallest value <em>k</em> such that:
      * <blockquote><pre>
-     * this.codePointAt(<i>k</i>) == searchChar
+     * this.codePointAt(<em>k</em>) == searchChar
      * </pre></blockquote>
      * is true. In either case, if no such character occurs in {@code seq},
      * then {@code INDEX_NOT_FOUND (-1)} is returned.
@@ -2730,14 +2730,14 @@ public class StringUtils {
      * object at an index no smaller than {@code startPos}, then
      * the index of the first such occurrence is returned. For values
      * of {@code searchChar} in the range from 0 to 0xFFFF (inclusive),
-     * this is the smallest value <i>k</i> such that:
+     * this is the smallest value <em>k</em> such that:
      * <blockquote><pre>
-     * (this.charAt(<i>k</i>) == searchChar) &amp;&amp; (<i>k</i> &gt;= startPos)
+     * (this.charAt(<em>k</em>) == searchChar) &amp;&amp; (<em>k</em> &gt;= startPos)
      * </pre></blockquote>
      * is true. For other values of {@code searchChar}, it is the
-     * smallest value <i>k</i> such that:
+     * smallest value <em>k</em> such that:
      * <blockquote><pre>
-     * (this.codePointAt(<i>k</i>) == searchChar) &amp;&amp; (<i>k</i> &gt;= startPos)
+     * (this.codePointAt(<em>k</em>) == searchChar) &amp;&amp; (<em>k</em> &gt;= startPos)
      * </pre></blockquote>
      * is true. In either case, if no such character occurs in {@code seq}
      * at or after position {@code startPos}, then
@@ -4924,14 +4924,14 @@ public class StringUtils {
      * Returns the index within {@code seq} of the last occurrence of
      * the specified character. For values of {@code searchChar} in the
      * range from 0 to 0xFFFF (inclusive), the index (in Unicode code
-     * units) returned is the largest value <i>k</i> such that:
+     * units) returned is the largest value <em>k</em> such that:
      * <blockquote><pre>
-     * this.charAt(<i>k</i>) == searchChar
+     * this.charAt(<em>k</em>) == searchChar
      * </pre></blockquote>
      * is true. For other values of {@code searchChar}, it is the
-     * largest value <i>k</i> such that:
+     * largest value <em>k</em> such that:
      * <blockquote><pre>
-     * this.codePointAt(<i>k</i>) == searchChar
+     * this.codePointAt(<em>k</em>) == searchChar
      * </pre></blockquote>
      * is true.  In either case, if no such character occurs in this
      * string, then {@code -1} is returned. Furthermore, a {@code null} or empty ("")
@@ -4966,14 +4966,14 @@ public class StringUtils {
      * the specified character, searching backward starting at the
      * specified index. For values of {@code searchChar} in the range
      * from 0 to 0xFFFF (inclusive), the index returned is the largest
-     * value <i>k</i> such that:
+     * value <em>k</em> such that:
      * <blockquote><pre>
-     * (this.charAt(<i>k</i>) == searchChar) &amp;&amp; (<i>k</i> &lt;= startPos)
+     * (this.charAt(<em>k</em>) == searchChar) &amp;&amp; (<em>k</em> &lt;= startPos)
      * </pre></blockquote>
      * is true. For other values of {@code searchChar}, it is the
-     * largest value <i>k</i> such that:
+     * largest value <em>k</em> such that:
      * <blockquote><pre>
-     * (this.codePointAt(<i>k</i>) == searchChar) &amp;&amp; (<i>k</i> &lt;= startPos)
+     * (this.codePointAt(<em>k</em>) == searchChar) &amp;&amp; (<em>k</em> &lt;= startPos)
      * </pre></blockquote>
      * is true. In either case, if no such character occurs in {@code seq}
      * at or before position {@code startPos}, then
@@ -5889,17 +5889,17 @@ public class StringUtils {
      * To use the DOTALL option prepend {@code "(?s)"} to the regex.
      * DOTALL is also known as single-line mode in Perl.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.removeAll(null, *)      = null
      * StringUtils.removeAll("any", (String) null)  = "any"
      * StringUtils.removeAll("any", "")    = "any"
      * StringUtils.removeAll("any", ".*")  = ""
      * StringUtils.removeAll("any", ".+")  = ""
      * StringUtils.removeAll("abc", ".?")  = ""
-     * StringUtils.removeAll("A&lt;__&gt;\n&lt;__&gt;B", "&lt;.*&gt;")      = "A\nB"
-     * StringUtils.removeAll("A&lt;__&gt;\n&lt;__&gt;B", "(?s)&lt;.*&gt;")  = "AB"
+     * StringUtils.removeAll("A<__>\n<__>B", "<.*>")      = "A\nB"
+     * StringUtils.removeAll("A<__>\n<__>B", "(?s)<.*>")  = "AB"
      * StringUtils.removeAll("ABCabc123abc", "[a-z]")     = "ABC123"
-     * </pre>
+     * }</pre>
      *
      * @param text  text to remove from, may be null
      * @param regex  the regular expression to which this string is to be matched
@@ -5958,7 +5958,7 @@ public class StringUtils {
     }
 
     /**
-     * Case insensitive removal of a substring if it is at the end of a source string,
+     * Case-insensitive removal of a substring if it is at the end of a source string,
      * otherwise returns the source string.
      *
      * <p>A {@code null} source string will return {@code null}.
@@ -6008,18 +6008,18 @@ public class StringUtils {
      * To use the DOTALL option prepend {@code "(?s)"} to the regex.
      * DOTALL is also known as single-line mode in Perl.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.removeFirst(null, *)      = null
      * StringUtils.removeFirst("any", (String) null)  = "any"
      * StringUtils.removeFirst("any", "")    = "any"
      * StringUtils.removeFirst("any", ".*")  = ""
      * StringUtils.removeFirst("any", ".+")  = ""
      * StringUtils.removeFirst("abc", ".?")  = "bc"
-     * StringUtils.removeFirst("A&lt;__&gt;\n&lt;__&gt;B", "&lt;.*&gt;")      = "A\n&lt;__&gt;B"
-     * StringUtils.removeFirst("A&lt;__&gt;\n&lt;__&gt;B", "(?s)&lt;.*&gt;")  = "AB"
+     * StringUtils.removeFirst("A<__>\n<__>B", "<.*>")      = "A\n<__>B"
+     * StringUtils.removeFirst("A<__>\n<__>B", "(?s)<.*>")  = "AB"
      * StringUtils.removeFirst("ABCabc123", "[a-z]")          = "ABCbc123"
      * StringUtils.removeFirst("ABCabc123abc", "[a-z]+")      = "ABC123abc"
-     * </pre>
+     * }</pre>
      *
      * @param text  text to remove from, may be null
      * @param regex  the regular expression to which this string is to be matched
@@ -6043,7 +6043,7 @@ public class StringUtils {
     }
 
     /**
-     * Case insensitive removal of all occurrences of a substring from within
+     * Case-insensitive removal of all occurrences of a substring from within
      * the source string.
      *
      * <p>
@@ -6088,12 +6088,12 @@ public class StringUtils {
      *
      * <p>A {@code null} reference passed to this method is a no-op.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.removePattern(null, *)       = null
      * StringUtils.removePattern("any", (String) null)   = "any"
-     * StringUtils.removePattern("A&lt;__&gt;\n&lt;__&gt;B", "&lt;.*&gt;")  = "AB"
+     * StringUtils.removePattern("A<__>\n<__>B", "<.*>")  = "AB"
      * StringUtils.removePattern("ABCabc123", "[a-z]")    = "ABC123"
-     * </pre>
+     * }</pre>
      *
      * @param source
      *            the source string
@@ -6178,7 +6178,7 @@ public class StringUtils {
     }
 
     /**
-     * Case insensitive removal of a substring if it is at the beginning of a source string,
+     * Case-insensitive removal of a substring if it is at the beginning of a source string,
      * otherwise returns the source string.
      *
      * <p>A {@code null} source string will return {@code null}.
@@ -6458,7 +6458,7 @@ public class StringUtils {
      * To use the DOTALL option prepend {@code "(?s)"} to the regex.
      * DOTALL is also known as single-line mode in Perl.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.replaceAll(null, *, *)       = null
      * StringUtils.replaceAll("any", (String) null, *)   = "any"
      * StringUtils.replaceAll("any", *, null)   = "any"
@@ -6466,13 +6466,13 @@ public class StringUtils {
      * StringUtils.replaceAll("", ".*", "zzz")  = "zzz"
      * StringUtils.replaceAll("", ".+", "zzz")  = ""
      * StringUtils.replaceAll("abc", "", "ZZ")  = "ZZaZZbZZcZZ"
-     * StringUtils.replaceAll("&lt;__&gt;\n&lt;__&gt;", "&lt;.*&gt;", "z")      = "z\nz"
-     * StringUtils.replaceAll("&lt;__&gt;\n&lt;__&gt;", "(?s)&lt;.*&gt;", "z")  = "z"
+     * StringUtils.replaceAll("<__>\n<__>", "<.*>", "z")      = "z\nz"
+     * StringUtils.replaceAll("<__>\n<__>", "(?s)<.*>", "z")  = "z"
      * StringUtils.replaceAll("ABCabc123", "[a-z]", "_")       = "ABC___123"
      * StringUtils.replaceAll("ABCabc123", "[^A-Z0-9]+", "_")  = "ABC_123"
      * StringUtils.replaceAll("ABCabc123", "[^A-Z0-9]+", "")   = "ABC123"
      * StringUtils.replaceAll("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2")  = "Lorem_ipsum_dolor_sit"
-     * </pre>
+     * }</pre>
      *
      * @param text  text to search and replace in, may be null
      * @param regex  the regular expression to which this string is to be matched
@@ -6862,7 +6862,7 @@ public class StringUtils {
      * To use the DOTALL option prepend {@code "(?s)"} to the regex.
      * DOTALL is also known as single-line mode in Perl.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.replaceFirst(null, *, *)       = null
      * StringUtils.replaceFirst("any", (String) null, *)   = "any"
      * StringUtils.replaceFirst("any", *, null)   = "any"
@@ -6870,13 +6870,13 @@ public class StringUtils {
      * StringUtils.replaceFirst("", ".*", "zzz")  = "zzz"
      * StringUtils.replaceFirst("", ".+", "zzz")  = ""
      * StringUtils.replaceFirst("abc", "", "ZZ")  = "ZZabc"
-     * StringUtils.replaceFirst("&lt;__&gt;\n&lt;__&gt;", "&lt;.*&gt;", "z")      = "z\n&lt;__&gt;"
-     * StringUtils.replaceFirst("&lt;__&gt;\n&lt;__&gt;", "(?s)&lt;.*&gt;", "z")  = "z"
+     * StringUtils.replaceFirst("<__>\n<__>", "<.*>", "z")      = "z\n<__>"
+     * StringUtils.replaceFirst("<__>\n<__>", "(?s)<.*>", "z")  = "z"
      * StringUtils.replaceFirst("ABCabc123", "[a-z]", "_")          = "ABC_bc123"
      * StringUtils.replaceFirst("ABCabc123abc", "[^A-Z0-9]+", "_")  = "ABC_123abc"
      * StringUtils.replaceFirst("ABCabc123abc", "[^A-Z0-9]+", "")   = "ABC123abc"
      * StringUtils.replaceFirst("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2")  = "Lorem_ipsum  dolor   sit"
-     * </pre>
+     * }</pre>
      *
      * @param text  text to search and replace in, may be null
      * @param regex  the regular expression to which this string is to be matched
@@ -7028,19 +7028,19 @@ public class StringUtils {
      *
      * <p>A {@code null} reference passed to this method is a no-op.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.replacePattern(null, *, *)       = null
      * StringUtils.replacePattern("any", (String) null, *)   = "any"
      * StringUtils.replacePattern("any", *, null)   = "any"
      * StringUtils.replacePattern("", "", "zzz")    = "zzz"
      * StringUtils.replacePattern("", ".*", "zzz")  = "zzz"
      * StringUtils.replacePattern("", ".+", "zzz")  = ""
-     * StringUtils.replacePattern("&lt;__&gt;\n&lt;__&gt;", "&lt;.*&gt;", "z")       = "z"
+     * StringUtils.replacePattern("<__>\n<__>", "<.*>", "z")       = "z"
      * StringUtils.replacePattern("ABCabc123", "[a-z]", "_")       = "ABC___123"
      * StringUtils.replacePattern("ABCabc123", "[^A-Z0-9]+", "_")  = "ABC_123"
      * StringUtils.replacePattern("ABCabc123", "[^A-Z0-9]+", "")   = "ABC123"
      * StringUtils.replacePattern("Lorem ipsum  dolor   sit", "( +)([a-z]+)", "_$2")  = "Lorem_ipsum_dolor_sit"
-     * </pre>
+     * }</pre>
      *
      * @param source
      *            the source string
@@ -7758,10 +7758,10 @@ public class StringUtils {
      * StringUtils.splitPreserveAllTokens("a\tb\nc", null) = ["a", "b", "c"]
      * StringUtils.splitPreserveAllTokens("a b c", ' ')    = ["a", "b", "c"]
      * StringUtils.splitPreserveAllTokens("a b c ", ' ')   = ["a", "b", "c", ""]
-     * StringUtils.splitPreserveAllTokens("a b c  ", ' ')   = ["a", "b", "c", "", ""]
-     * StringUtils.splitPreserveAllTokens(" a b c", ' ')   = ["", a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens("  a b c", ' ')  = ["", "", a", "b", "c"]
-     * StringUtils.splitPreserveAllTokens(" a b c ", ' ')  = ["", a", "b", "c", ""]
+     * StringUtils.splitPreserveAllTokens("a b c  ", ' ')  = ["a", "b", "c", "", ""]
+     * StringUtils.splitPreserveAllTokens(" a b c", ' ')   = ["", "a", "b", "c"]
+     * StringUtils.splitPreserveAllTokens("  a b c", ' ')  = ["", "", "a", "b", "c"]
+     * StringUtils.splitPreserveAllTokens(" a b c ", ' ')  = ["", "a", "b", "c", ""]
      * </pre>
      *
      * @param str  the String to parse, may be {@code null}
@@ -7791,14 +7791,14 @@ public class StringUtils {
      * StringUtils.splitPreserveAllTokens("", *)             = []
      * StringUtils.splitPreserveAllTokens("abc def", null)   = ["abc", "def"]
      * StringUtils.splitPreserveAllTokens("abc def", " ")    = ["abc", "def"]
-     * StringUtils.splitPreserveAllTokens("abc  def", " ")   = ["abc", "", def"]
+     * StringUtils.splitPreserveAllTokens("abc  def", " ")   = ["abc", "", "def"]
      * StringUtils.splitPreserveAllTokens("ab:cd:ef", ":")   = ["ab", "cd", "ef"]
      * StringUtils.splitPreserveAllTokens("ab:cd:ef:", ":")  = ["ab", "cd", "ef", ""]
      * StringUtils.splitPreserveAllTokens("ab:cd:ef::", ":") = ["ab", "cd", "ef", "", ""]
-     * StringUtils.splitPreserveAllTokens("ab::cd:ef", ":")  = ["ab", "", cd", "ef"]
-     * StringUtils.splitPreserveAllTokens(":cd:ef", ":")     = ["", cd", "ef"]
-     * StringUtils.splitPreserveAllTokens("::cd:ef", ":")    = ["", "", cd", "ef"]
-     * StringUtils.splitPreserveAllTokens(":cd:ef:", ":")    = ["", cd", "ef", ""]
+     * StringUtils.splitPreserveAllTokens("ab::cd:ef", ":")  = ["ab", "", "cd", "ef"]
+     * StringUtils.splitPreserveAllTokens(":cd:ef", ":")     = ["", "cd", "ef"]
+     * StringUtils.splitPreserveAllTokens("::cd:ef", ":")    = ["", "", "cd", "ef"]
+     * StringUtils.splitPreserveAllTokens(":cd:ef:", ":")    = ["", "cd", "ef", ""]
      * </pre>
      *
      * @param str  the String to parse, may be {@code null}
@@ -8024,7 +8024,7 @@ public class StringUtils {
     }
 
     /**
-     * Check if a CharSequence starts with a specified prefix (optionally case insensitive).
+     * Check if a CharSequence starts with a specified prefix (optionally case-insensitive).
      *
      * @see String#startsWith(String)
      * @param str  the CharSequence to check, may be null
@@ -8081,7 +8081,7 @@ public class StringUtils {
     }
 
     /**
-     * Case insensitive check if a CharSequence starts with a specified prefix.
+     * Case-insensitive check if a CharSequence starts with a specified prefix.
      *
      * <p>{@code null}s are handled without exceptions. Two {@code null}
      * references are considered to be equal. The comparison is case insensitive.</p>
@@ -9013,10 +9013,10 @@ public class StringUtils {
     }
 
     /**
-     * Converts the given source String as a upper-case using the {@link Locale#ROOT} locale in a null-safe manner.
+     * Converts the given source String as an upper-case using the {@link Locale#ROOT} locale in a null-safe manner.
      *
      * @param source A source String or null.
-     * @return the given source String as a upper-case using the {@link Locale#ROOT} locale or null.
+     * @return the given source String as an upper-case using the {@link Locale#ROOT} locale or null.
      * @since 3.10
      */
     public static String toRootUpperCase(final String source) {
@@ -9031,15 +9031,13 @@ public class StringUtils {
      * @param charsetName
      *            the encoding to use, if null then use the platform default
      * @return a new String
-     * @throws UnsupportedEncodingException
-     *             Never thrown
      * @throws NullPointerException
      *             if the input is null
      * @deprecated use {@link StringUtils#toEncodedString(byte[], Charset)} instead of String constants in your code
      * @since 3.1
      */
     @Deprecated
-    public static String toString(final byte[] bytes, final String charsetName) throws UnsupportedEncodingException {
+    public static String toString(final byte[] bytes, final String charsetName) {
         return new String(bytes, Charsets.toCharset(charsetName));
     }
 

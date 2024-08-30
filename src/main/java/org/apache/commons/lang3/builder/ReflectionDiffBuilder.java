@@ -37,7 +37,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
  * </p>
  *
  * <pre>{@code
- * public class Person implements Diffable&lt;Person&gt; {
+ * public class Person implements Diffable<Person> {
  *   String name;
  *   int age;
  *   boolean smoker;
@@ -85,6 +85,13 @@ public class ReflectionDiffBuilder<T> implements Builder<DiffResult<T>> {
 
         private String[] excludeFieldNames = ArrayUtils.EMPTY_STRING_ARRAY;
         private DiffBuilder<T> diffBuilder;
+
+        /**
+         * Constructs a new instance.
+         */
+        public Builder() {
+            // empty
+        }
 
         /**
          * Builds a new configured {@link ReflectionDiffBuilder}.

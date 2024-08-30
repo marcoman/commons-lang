@@ -42,14 +42,15 @@ import org.apache.commons.lang3.stream.Streams.FailableStream;
  * throw Exceptions, at least not checked Exceptions, AKA instances of {@link Exception}. This enforces the use of
  * constructs like:
  *
- * <pre>
- * Consumer&lt;java.lang.reflect.Method&gt; consumer = m -&gt; {
+ * <pre>{@code
+ * Consumer<java.lang.reflect.Method> consumer = m -&gt; {
  *     try {
  *         m.invoke(o, args);
  *     } catch (Throwable t) {
  *         throw Failable.rethrow(t);
  *     }
  * };
+ * }
  * </pre>
  *
  * <p>
@@ -495,10 +496,10 @@ public class Failable {
      * If either the original action, or any of the resource action fails, then the <em>first</em> failure (AKA
      * {@link Throwable}) is rethrown. Example use:
      *
-     * <pre>
+     * <pre>{@code
      * final FileInputStream fis = new FileInputStream("my.file");
-     * Functions.tryWithResources(useInputStream(fis), null, () -&gt; fis.close());
-     * </pre>
+     * Functions.tryWithResources(useInputStream(fis), null, () -> fis.close());
+     * }</pre>
      *
      * @param action The action to execute. This object <em>will</em> always be invoked.
      * @param errorHandler An optional error handler, which will be invoked finally, if any error occurred. The error
@@ -551,10 +552,10 @@ public class Failable {
      * If either the original action, or any of the resource action fails, then the <em>first</em> failure (AKA
      * {@link Throwable}) is rethrown. Example use:
      *
-     * <pre>
+     * <pre>{@code
      * final FileInputStream fis = new FileInputStream("my.file");
-     * Functions.tryWithResources(useInputStream(fis), () -&gt; fis.close());
-     * </pre>
+     * Functions.tryWithResources(useInputStream(fis), () -> fis.close());
+     * }</pre>
      *
      * @param action The action to execute. This object <em>will</em> always be invoked.
      * @param resources The resource actions to execute. <em>All</em> resource actions will be invoked, in the given
@@ -562,8 +563,7 @@ public class Failable {
      * @see #tryWithResources(FailableRunnable, FailableConsumer, FailableRunnable...)
      */
     @SafeVarargs
-    public static void tryWithResources(final FailableRunnable<? extends Throwable> action,
-        final FailableRunnable<? extends Throwable>... resources) {
+    public static void tryWithResources(final FailableRunnable<? extends Throwable> action, final FailableRunnable<? extends Throwable>... resources) {
         tryWithResources(action, null, resources);
     }
 

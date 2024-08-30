@@ -19,6 +19,7 @@ package org.apache.commons.lang3.exception;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,6 +46,13 @@ public class DefaultExceptionContext implements ExceptionContext, Serializable {
 
     /** The list storing the label-data pairs. */
     private final List<Pair<String, Object>> contextValues = new ArrayList<>();
+
+    /**
+     * Constructs a new instance.
+     */
+    public DefaultExceptionContext() {
+        // empty
+    }
 
     /**
      * {@inheritDoc}
@@ -99,13 +107,11 @@ public class DefaultExceptionContext implements ExceptionContext, Serializable {
         if (baseMessage != null) {
             buffer.append(baseMessage);
         }
-
         if (!contextValues.isEmpty()) {
             if (buffer.length() > 0) {
                 buffer.append('\n');
             }
             buffer.append("Exception Context:\n");
-
             int i = 0;
             for (final Pair<String, Object> pair : contextValues) {
                 buffer.append("\t[");
@@ -114,16 +120,11 @@ public class DefaultExceptionContext implements ExceptionContext, Serializable {
                 buffer.append(pair.getKey());
                 buffer.append("=");
                 final Object value = pair.getValue();
-                if (value == null) {
-                    buffer.append("null");
-                } else {
-                    String valueStr;
-                    try {
-                        valueStr = value.toString();
-                    } catch (final Exception e) {
-                        valueStr = "Exception thrown on toString(): " + ExceptionUtils.getStackTrace(e);
-                    }
-                    buffer.append(valueStr);
+                try {
+                    buffer.append(Objects.toString(value));
+                } catch (final Exception e) {
+                    buffer.append("Exception thrown on toString(): ");
+                    buffer.append(ExceptionUtils.getStackTrace(e));
                 }
                 buffer.append("]\n");
             }
